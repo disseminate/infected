@@ -1,0 +1,7 @@
+"Infected"
+{
+	"base"			"sandbox"
+	"title"			"Infected"
+	"menusystem" 	"1"
+	"maps"			"^rp_"
+}
