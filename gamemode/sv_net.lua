@@ -10,6 +10,7 @@ util.AddNetworkString( "nToggleHolster" );
 util.AddNetworkString( "nChangeName" );
 util.AddNetworkString( "nChangeDesc" );
 util.AddNetworkString( "nSetTyping" );
+util.AddNetworkString( "nSetExpression" );
 
 util.AddNetworkString( "nSay" );
 util.AddNetworkString( "nCCLocal" );

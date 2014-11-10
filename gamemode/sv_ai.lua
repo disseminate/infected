@@ -229,12 +229,11 @@ function GM:SpawnZombieRandom()
 	
 	if( #tab == 0 ) then
 		
-		MsgC( COLOR_ERROR, "ERROR: All zombie spawns occupied.\n" );
 		return;
 		
 	end
 	
-	local pos = table.Random( tab ) + Vector( 0, 0, 8 );
+	local pos = table.Random( tab ) + Vector( 0, 0, 16 );
 	
 	local z = ents.Create( "inf_zombie" );
 	z:SetPos( pos );

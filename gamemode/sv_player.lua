@@ -327,3 +327,24 @@ local function nSetTyping( len, ply )
 	
 end
 net.Receive( "nSetTyping", nSetTyping );
+
+local function nSetExpression( len, ply )
+	
+	local mode = net.ReadFloat();
+	
+	if( mode == 1 ) then
+		
+		ply:PlayScene( "scenes/expressions/citizen_scared_idle_01.vcd", 0 );
+		
+	elseif( mode == 2 ) then
+		
+		ply:PlayScene( "scenes/expressions/citizen_angry_idle_01.vcd", 0 );
+		
+	elseif( mode == 3 ) then
+		
+		ply:PlayScene( "scenes/expressions/citizen_angry_combat_01.vcd", 0 );
+		
+	end
+	
+end
+net.Receive( "nSetExpression", nSetExpression );

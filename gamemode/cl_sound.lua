@@ -72,6 +72,7 @@ function GM:PlaySong( song, f, vol )
 			
 		end
 		
+		self.NextIdleTime = CurTime() + math.random( 600, 900 );
 		self.CurrentSongEnd = CurTime() + song[2];
 		
 	else
@@ -107,6 +108,7 @@ function GM:PlaySong( song, f, vol )
 			end
 			
 			self.CurrentSongEnd = CurTime() + song[2];
+			self.NextIdleTime = CurTime() + math.random( 600, 900 );
 			
 		end
 		
@@ -166,10 +168,17 @@ function GM:MusicThink()
 		end
 		
 		self.CurrentSongEnd = CurTime() + self.NextSong[2];
+		self.NextIdleTime = CurTime() + math.random( 600, 900 );
 		
 		self.NextSongTime = nil;
 		self.NextSong = nil;
 		self.NextVolume = nil;
+		
+	end
+	
+	if( self.NextIdleTime and CurTime() >= self.NextIdleTime ) then
+		
+		self:PlayRandomLight();
 		
 	end
 	
