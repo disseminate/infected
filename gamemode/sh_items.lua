@@ -147,6 +147,7 @@ function meta:GiveItem( item )
 	
 	item.X = x;
 	item.Y = y;
+	item.Owner = self;
 	
 	table.insert( self.Inventory, item );
 	
