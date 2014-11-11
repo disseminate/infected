@@ -4,6 +4,7 @@ include( "sh_accessor.lua" );
 include( "sh_admin.lua" );
 include( "sh_animations.lua" );
 include( "sh_chatcmd.lua" );
+include( "sh_items.lua" );
 include( "sh_models.lua" );
 include( "sh_player.lua" );
 include( "sh_playerclass.lua" );
