@@ -1,10 +1,14 @@
 local meta = FindMetaTable( "Player" );
 
-function meta:ClearInventory()
+function meta:ClearInventory( save )
 	
 	self.Inventory = { };
 	
-	mysqloo.Query( "DELETE FROM items WHERE SteamID = '" .. self:SteamID() .. "' AND CharID = '" .. self:CharID() .. "';" );
+	if( save ) then
+		
+		mysqloo.Query( "DELETE FROM items WHERE SteamID = '" .. self:SteamID() .. "' AND CharID = '" .. self:CharID() .. "';" );
+		
+	end
 	
 	net.Start( "nClearInventory" );
 	net.Send( self );
