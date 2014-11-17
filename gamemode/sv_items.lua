@@ -61,3 +61,24 @@ function meta:RemoveItem( key )
 	self.Inventory[key] = nil;
 	
 end
+
+function meta:MoveItem( key, x, y )
+	
+	self:CheckInventory();
+	
+	if( !self.Inventory[key] ) then return end
+	
+	if( self:IsInventorySlotOccupiedItem( x, y, GAMEMODE:GetMetaItem( self.Inventory[key].Class ).W, GAMEMODE:GetMetaItem( self.Inventory[key].Class ).H ) ) then return end
+	
+	mysqloo.Query( "UPDATE items SET X = '" .. x .. "', Y = '" .. y .. "' WHERE SteamID = '" .. self:SteamID() .. "' AND CharID = '" .. self:CharID() .. "' AND X = '" .. self.Inventory[key].X .. "' AND Y = '" .. self.Inventory[key].Y .. "';" );
+	
+	net.Start( "nMoveItem" );
+		net.WriteFloat( key );
+		net.WriteFloat( x );
+		net.WriteFloat( y );
+	net.Send( self );
+	
+	self.Inventory[key].X = x;
+	self.Inventory[key].Y = y;
+	
+end

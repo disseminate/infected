@@ -62,6 +62,36 @@ function meta:CheckInventory()
 	
 end
 
+function meta:IsInventorySlotOccupiedItem( i, j, w, h )
+	
+	self:CheckInventory();
+	
+	if( i + w - 1 <= 6 and j + h - 1 <= 10 ) then -- If the item could potentially fit here
+		
+		local good = true;
+		
+		for x = 1, w do -- For each cell of the width of the item
+			
+			for y = 1, h do
+				
+				if( self:IsInventorySlotOccupied( i + x - 1, j + y - 1 ) ) then
+					
+					good = false;
+					
+				end
+				
+			end
+			
+		end
+		
+		return !good;
+		
+	end
+	
+	return true;
+	
+end
+
 function meta:IsInventorySlotOccupied( x, y )
 	
 	self:CheckInventory();
@@ -92,29 +122,9 @@ function meta:GetNextAvailableSlot( w, h )
 		
 		for i = 1, 6 do
 			
-			if( i + w - 1 <= 6 and j + h - 1 <= 10 ) then -- If the item could potentially fit here
+			if( !self:IsInventorySlotOccupiedItem( i, j, w, h ) ) then
 				
-				local good = true;
-				
-				for x = 1, w do -- For each cell of the width of the item
-					
-					for y = 1, h do
-						
-						if( self:IsInventorySlotOccupied( i + x - 1, j + y - 1 ) ) then
-							
-							good = false;
-							
-						end
-						
-					end
-					
-				end
-				
-				if( good ) then
-					
-					return i, j;
-					
-				end
+				return i, j;
 				
 			end
 			

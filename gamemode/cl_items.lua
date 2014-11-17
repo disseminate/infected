@@ -26,3 +26,15 @@ local function nRemoveItem( len )
 	
 end
 net.Receive( "nGiveItem", nGiveItem );
+
+local function nMoveItem( len )
+	
+	local key = net.ReadFloat();
+	local x = net.ReadFloat();
+	local y = net.ReadFloat();
+	
+	LocalPlayer().Inventory[key].X = x;
+	LocalPlayer().Inventory[key].Y = y;
+	
+end
+net.Receive( "nMoveItem", nMoveItem );
