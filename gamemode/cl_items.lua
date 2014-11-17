@@ -119,23 +119,11 @@ function GM:RefreshInventory()
 				
 				if( bDoDrop ) then
 					
-					local xi = ( receiver.ItemX - 1 ) * 48;
-					local yi = ( receiver.ItemY - 1 ) * 48;
+					local i = receiver.ItemX - math.floor( GAMEMODE:GetMetaItem( droppable[1].Item.Class ).W / 2 );
+					local j = receiver.ItemY - math.floor( GAMEMODE:GetMetaItem( droppable[1].Item.Class ).H / 2 );
 					
-					local pw, ph = droppable[1]:GetSize();
-					
-					xi = xi - pw / 2;
-					yi = yi - ph / 2;
-					
-					pw = math.floor( xi / 48 );
-					ph = math.floor( yi / 48 );
-					
-					local i = pw;
-					local j = ph;
-					MsgN( i );
-					MsgN( j )
 					if( i >= 1 and j >= 1 and self.D.Inventory.Slots[j][i] ) then
-						--receiver = self.D.Inventory.Slots[j][i];
+						receiver = self.D.Inventory.Slots[j][i];
 					end
 					
 					if( !receiver.Item ) then
