@@ -443,7 +443,7 @@ function GM:HUDPaintCharCreate()
 		surface.SetFont( "Infected.MainTitle" );
 		
 		surface.SetTextPos( 10, 10 );
-		surface.DrawText( "Who are you going to kill?" );
+		surface.DrawText( "Who's finished?" );
 		
 	elseif( self.CharCreateMode == CHARCREATE_SELECTCLASS ) then
 		

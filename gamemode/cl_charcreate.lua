@@ -358,6 +358,7 @@ function GM:CharCreateSelect()
 			self:Remove();
 			
 		end
+		b.TextButtonBackground = true;
 		
 		if( k == LocalPlayer():CharID() ) then
 			
@@ -406,6 +407,7 @@ function GM:CharCreateSelect()
 			self:Remove();
 			
 		end
+		self.D.CancelBut.TextButtonBackground = true;
 		
 	end
 	
@@ -476,6 +478,7 @@ function GM:CharCreateDelete()
 			self:Remove();
 			
 		end
+		b.TextButtonBackground = true;
 		
 		if( k == LocalPlayer():CharID() ) then
 			
@@ -524,6 +527,7 @@ function GM:CharCreateDelete()
 			self:Remove();
 			
 		end
+		self.D.CancelBut.TextButtonBackground = true;
 		
 	end
 	
@@ -584,6 +588,7 @@ function GM:CharCreateSelectClass()
 		self:Remove();
 		
 	end
+	b.TextButtonBackground = true;
 	
 	table.insert( self.CharCreateSelectButtons, b );
 	
@@ -629,6 +634,7 @@ function GM:CharCreateSelectClass()
 			self:Remove();
 			
 		end
+		b.TextButtonBackground = true;
 		
 		table.insert( self.CharCreateSelectButtons, b );
 		
@@ -676,6 +682,7 @@ function GM:CharCreateSelectClass()
 			self:Remove();
 			
 		end
+		b.TextButtonBackground = true;
 		
 		table.insert( self.CharCreateSelectButtons, b );
 		
@@ -723,6 +730,7 @@ function GM:CharCreateSelectClass()
 			self:Remove();
 			
 		end
+		b.TextButtonBackground = true;
 		
 		table.insert( self.CharCreateSelectButtons, b );
 		
@@ -763,6 +771,7 @@ function GM:CharCreateSelectClass()
 		self:Remove();
 		
 	end
+	self.D.CancelBut.TextButtonBackground = true;
 	
 	for _, v in pairs( self.CharCreateSelectButtons ) do
 		

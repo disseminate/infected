@@ -104,6 +104,24 @@ function SKIN:PaintButton( panel, w, h )
 		
 	end
 	
+	if( panel.TextButtonBackground ) then
+		
+		if( panel.Hovered ) then
+			
+			surface.SetDrawColor( Color( 255, 255, 255, 255 ) );
+			surface.DrawRect( 0, 0, w, h );
+			panel:SetTextColor( Color( 0, 0, 0, 255 ) );
+			panel:ApplySchemeSettings();
+			
+		else
+			
+			panel:SetTextColor( Color( 255, 255, 255, 255 ) );
+			panel:ApplySchemeSettings();
+			
+		end
+		
+	end
+	
 end
 
 function SKIN:PaintTextEntry( panel, w, h )

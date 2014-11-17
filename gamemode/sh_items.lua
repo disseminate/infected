@@ -26,7 +26,7 @@ if( #files > 0 ) then
 			
 		end
 		
-		include( v );
+		include( "items/" .. v );
 		
 		ITEM.Class = string.StripExtension( v );
 		
