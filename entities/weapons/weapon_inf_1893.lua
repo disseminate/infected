@@ -39,6 +39,12 @@ SWEP.Primary.NumBullets		= 1;
 SWEP.Primary.Delay			= 1;
 SWEP.Primary.ViewPunch		= Angle( -5, 0, 0 );
 
+SWEP.Description = "A Winchester 1893 bolt-action rifle.";
+SWEP.W = 5;
+SWEP.H = 2;
+SWEP.PrimaryWep = true;
+SWEP.SecondaryWep = false;
+
 SWEP.ShotgunReload = true;
 
 SWEP.ZombieRadius			= 3000;

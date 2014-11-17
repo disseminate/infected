@@ -37,3 +37,5 @@ util.AddNetworkString( "nMoveItem" );
 util.AddNetworkString( "nUseItem" );
 util.AddNetworkString( "nDropItem" );
 util.AddNetworkString( "nDestroyItem" );
+util.AddNetworkString( "nEquipPrimary" );
+util.AddNetworkString( "nEquipSecondary" );

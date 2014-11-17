@@ -41,7 +41,13 @@ function meta:GiveItemVars( class, vars )
 		varstr = varstr .. k .. "|" .. v .. ";"
 	end
 	
-	mysqloo.Query( "INSERT INTO items ( SteamID, CharID, Class, X, Y, Vars ) VALUES ( '" .. self:SteamID() .. "', '" .. self:CharID() .. "', '" .. item.Class .. "', '" .. item.X .. "', '" .. item.Y .. "', '" .. varstr .. "' )" );
+	local p = tonumber( item.Primary );
+	local s = tonumber( item.Secondary );
+	
+	if( !p ) then p = 0 end
+	if( !s ) then s = 0 end
+	
+	mysqloo.Query( "INSERT INTO items ( SteamID, CharID, Class, X, Y, PrimaryEquipped, SecondaryEquipped, Vars ) VALUES ( '" .. self:SteamID() .. "', '" .. self:CharID() .. "', '" .. item.Class .. "', '" .. item.X .. "', '" .. item.Y .. "', '" .. p .. "', '" .. s .. "', '" .. varstr .. "' )" );
 	
 	table.insert( self:GetItemDataByCharID( self:CharID() ), {
 		CharID = self:CharID(),
@@ -49,7 +55,9 @@ function meta:GiveItemVars( class, vars )
 		SteamID = self:SteamID(),
 		Vars = varstr,
 		X = item.X,
-		Y = item.Y
+		Y = item.Y,
+		Primary = item.Primary,
+		Secondary = item.Secondary,
 	} );
 	
 	self.Inventory[item.Key] = item;
@@ -85,7 +93,13 @@ function meta:GiveItem( item )
 		varstr = varstr .. k .. "|" .. v .. ";"
 	end
 	
-	mysqloo.Query( "INSERT INTO items ( SteamID, CharID, Class, X, Y, Vars ) VALUES ( '" .. self:SteamID() .. "', '" .. self:CharID() .. "', '" .. item.Class .. "', '" .. item.X .. "', '" .. item.Y .. "', '" .. varstr .. "' )" );
+	local p = tonumber( item.Primary );
+	local s = tonumber( item.Secondary );
+	
+	if( !p ) then p = 0 end
+	if( !s ) then s = 0 end
+	
+	mysqloo.Query( "INSERT INTO items ( SteamID, CharID, Class, X, Y, PrimaryEquipped, SecondaryEquipped, Vars ) VALUES ( '" .. self:SteamID() .. "', '" .. self:CharID() .. "', '" .. item.Class .. "', '" .. item.X .. "', '" .. item.Y .. "', '" .. p .. "', '" .. s .. "', '" .. varstr .. "' )" );
 	
 	table.insert( self:GetItemDataByCharID( self:CharID() ), {
 		CharID = self:CharID(),
@@ -93,7 +107,9 @@ function meta:GiveItem( item )
 		SteamID = self:SteamID(),
 		Vars = varstr,
 		X = item.X,
-		Y = item.Y
+		Y = item.Y,
+		Primary = item.Primary,
+		Secondary = item.Secondary
 	} );
 	
 	self.Inventory[item.Key] = item;
@@ -251,3 +267,63 @@ local function nDestroyItem( len, ply )
 	
 end
 net.Receive( "nDestroyItem", nDestroyItem );
+
+local function nEquipPrimary( len, ply )
+	
+	local key = net.ReadFloat();
+	
+	if( !ply.Inventory[key] ) then return end
+	if( !GAMEMODE:GetMetaItem( ply.Inventory[key].Class ).PrimaryWep ) then return end
+	
+	mysqloo.Query( "UPDATE items SET X = '0', Y = '0', PrimaryEquipped = '1', SecondaryEquipped = '0' WHERE SteamID = '" .. ply:SteamID() .. "' AND CharID = '" .. ply:CharID() .. "' AND X = '" .. ply.Inventory[key].X .. "' AND Y = '" .. ply.Inventory[key].Y .. "';" );
+	
+	for k, v in pairs( ply:GetItemDataByCharID( ply:CharID() ) ) do
+		
+		if( v.X == ply.Inventory[key].X and v.Y == ply.Inventory[key].Y ) then
+			
+			v.X = 0;
+			v.Y = 0;
+			v.Primary = true;
+			v.Secondary = false;
+			
+		end
+		
+	end
+	
+	ply.Inventory[key].X = 0;
+	ply.Inventory[key].Y = 0;
+	ply.Inventory[key].Primary = true;
+	ply.Inventory[key].Secondary = false;
+	
+end
+net.Receive( "nEquipPrimary", nEquipPrimary );
+
+local function nEquipSecondary( len, ply )
+	
+	local key = net.ReadFloat();
+	
+	if( !ply.Inventory[key] ) then return end
+	if( !GAMEMODE:GetMetaItem( ply.Inventory[key].Class ).SecondaryWep ) then return end
+	
+	mysqloo.Query( "UPDATE items SET X = '0', Y = '0', PrimaryEquipped = '0', SecondaryEquipped = '1' WHERE SteamID = '" .. ply:SteamID() .. "' AND CharID = '" .. ply:CharID() .. "' AND X = '" .. ply.Inventory[key].X .. "' AND Y = '" .. ply.Inventory[key].Y .. "';" );
+	
+	for k, v in pairs( ply:GetItemDataByCharID( ply:CharID() ) ) do
+		
+		if( v.X == ply.Inventory[key].X and v.Y == ply.Inventory[key].Y ) then
+			
+			v.X = 0;
+			v.Y = 0;
+			v.Primary = false;
+			v.Secondary = true;
+			
+		end
+		
+	end
+	
+	ply.Inventory[key].X = 0;
+	ply.Inventory[key].Y = 0;
+	ply.Inventory[key].Primary = false;
+	ply.Inventory[key].Secondary = true;
+	
+end
+net.Receive( "nEquipSecondary", nEquipSecondary );

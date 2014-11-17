@@ -157,6 +157,8 @@ SQLStructure["items"] = {
 	{ "Class", "TEXT" },
 	{ "X", "INT" },
 	{ "Y", "INT" },
+	{ "PrimaryEquipped", "INT" },
+	{ "SecondaryEquipped", "INT" },
 	{ "Vars", "TEXT" },
 };
 

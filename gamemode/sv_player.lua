@@ -114,16 +114,6 @@ function GM:PlayerLoadout( ply )
 		
 	end
 	
-	for _, v in pairs( weapons.GetList() ) do
-		
-		if( string.find( v.ClassName, "weapon_inf" ) and v.ClassName != "weapon_inf_base" ) then
-			
-			ply:Give( v.ClassName );
-			
-		end
-		
-	end
-	
 end
 
 function GM:PlayerDeathSound( ply )
@@ -246,11 +236,16 @@ function meta:LoadItemData( data )
 	
 	for _, v in pairs( data ) do
 		
+		if( !v.Class ) then continue; end
+		
 		local item = GAMEMODE:Item( v.Class );
 		
 		item.X = v.X;
 		item.Y = v.Y;
 		item.Owner = self;
+		
+		item.Primary = tobool( v.PrimaryEquipped );
+		item.Secondary = tobool( v.SecondaryEquipped );
 		
 		if( !self.NextItemKey ) then self.NextItemKey = 1 end
 		item.Key = self.NextItemKey;

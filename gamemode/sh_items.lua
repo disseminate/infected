@@ -10,15 +10,15 @@ if( #files > 0 ) then
 		
 		ITEM = { };
 		ITEM.Vars = { };
-		ITEM.Vars.Uses = 1;
 		
 		ITEM.Name = "Item";
 		ITEM.Desc = "Description";
 		ITEM.Model = "models/kleiner.mdl";
 		ITEM.W = 1;
 		ITEM.H = 1;
-		ITEM.RemoveOnUse = false;
-		ITEM.OnUse = function( item ) end
+		
+		ITEM.PrimaryWep = false;
+		ITEM.SecondaryWep = false;
 		
 		if( SERVER ) then
 			
@@ -36,6 +36,35 @@ if( #files > 0 ) then
 	
 end
 
+function GM:PostGamemodeLoaded()
+
+	for _, v in pairs( weapons.GetList() ) do
+		
+		if( string.find( v.ClassName, "weapon_inf" ) and ( v.PrimaryWep or v.SecondaryWep ) ) then
+			
+			ITEM = { };
+			ITEM.Vars = { };
+			ITEM.Vars.Clip = 0;
+			
+			ITEM.Name = v.PrintName;
+			ITEM.Desc = v.Description or "";
+			ITEM.Model = v.WorldModel;
+			ITEM.W = v.W or 1;
+			ITEM.H = v.H or 1;
+			
+			ITEM.PrimaryWep = v.PrimaryWep;
+			ITEM.SecondaryWep = v.SecondaryWep;
+			
+			ITEM.Class = v.ClassName;
+			
+			GAMEMODE.MetaItems[v.ClassName] = ITEM;
+			
+		end
+		
+	end
+	
+end
+
 function GM:GetMetaItem( class )
 	
 	return self.MetaItems[class];
@@ -46,7 +75,9 @@ function GM:Item( class )
 	
 	local tab = { };
 	tab.Class = class;
-	tab.Vars = table.Copy( self:GetMetaItem( class ).Vars ); -- Initialize default variables
+	tab.Vars = table.Copy( self:GetMetaItem( class ).Vars or { } ); -- Initialize default variables
+	tab.Primary = false;
+	tab.Secondary = false;
 	
 	return tab;
 	

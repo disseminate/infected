@@ -117,43 +117,62 @@ function GM:RefreshInventory()
 			self.D.Inventory.Slots[j][i]:SetSize( 48, 48 );
 			self.D.Inventory.Slots[j][i]:Receiver( "Items", function( receiver, droppable, bDoDrop, command, x, y )
 				
-				if( bDoDrop and !receiver.Item ) then
+				if( bDoDrop ) then
+					
+					local xi = ( receiver.ItemX - 1 ) * 48;
+					local yi = ( receiver.ItemY - 1 ) * 48;
 					
 					local pw, ph = droppable[1]:GetSize();
 					
-					pw = pw / 48;
-					ph = ph / 48;
+					xi = xi - pw / 2;
+					yi = yi - ph / 2;
 					
-					pw = math.floor( pw / 2 );
-					ph = math.floor( ph / 2 );
+					pw = math.floor( xi / 48 );
+					ph = math.floor( yi / 48 );
 					
-					local i = receiver.ItemX - pw;
-					local j = receiver.ItemY - ph;
-					
+					local i = pw;
+					local j = ph;
+					MsgN( i );
+					MsgN( j )
 					if( i >= 1 and j >= 1 and self.D.Inventory.Slots[j][i] ) then
-						receiver = self.D.Inventory.Slots[j][i];
+						--receiver = self.D.Inventory.Slots[j][i];
 					end
 					
-					self.D.Inventory.Slots[droppable[1].Item.Y][droppable[1].Item.X].Item = nil;
-					receiver.Item = droppable[1];
-					
-					droppable[1].Item.X = receiver.ItemX;
-					droppable[1].Item.Y = receiver.ItemY;
-					
-					net.Start( "nMoveItem" );
-						net.WriteFloat( droppable[1].Item.Key );
-						net.WriteFloat( receiver.ItemX );
-						net.WriteFloat( receiver.ItemY );
-					net.SendToServer();
-					
-					self:DeselectInventory();
-					
-					if( LocalPlayer():IsInventorySlotOccupiedItemFilter( x, y, GAMEMODE:GetMetaItem( LocalPlayer().Inventory[droppable[1].Item.Key].Class ).W, GAMEMODE:GetMetaItem( LocalPlayer().Inventory[droppable[1].Item.Key].Class ).H, droppable[1].Item.Key ) ) then return end
-					
-					LocalPlayer().Inventory[key].X = x;
-					LocalPlayer().Inventory[key].Y = y;
-					
-					droppable[1]:SetPos( ( droppable[1].Item.X - 1 ) * 48, ( droppable[1].Item.Y - 1 ) * 48 );
+					if( !receiver.Item ) then
+						
+						if( droppable[1].Item.X > 0 and droppable[1].Item.Y > 0 ) then
+							self.D.Inventory.Slots[droppable[1].Item.Y][droppable[1].Item.X].Item = nil;
+						end
+						
+						if( droppable[1].Item.Primary ) then
+							self.D.Inventory.Primary.Item = nil;
+						end
+						
+						if( droppable[1].Item.Secondary ) then
+							self.D.Inventory.Secondary.Item = nil;
+						end
+						
+						receiver.Item = droppable[1];
+						
+						droppable[1].Item.X = receiver.ItemX;
+						droppable[1].Item.Y = receiver.ItemY;
+						
+						net.Start( "nMoveItem" );
+							net.WriteFloat( droppable[1].Item.Key );
+							net.WriteFloat( receiver.ItemX );
+							net.WriteFloat( receiver.ItemY );
+						net.SendToServer();
+						
+						self:DeselectInventory();
+						
+						if( LocalPlayer():IsInventorySlotOccupiedItemFilter( x, y, GAMEMODE:GetMetaItem( LocalPlayer().Inventory[droppable[1].Item.Key].Class ).W, GAMEMODE:GetMetaItem( LocalPlayer().Inventory[droppable[1].Item.Key].Class ).H, droppable[1].Item.Key ) ) then return end
+						
+						LocalPlayer().Inventory[key].X = x;
+						LocalPlayer().Inventory[key].Y = y;
+						
+						droppable[1]:SetPos( ( droppable[1].Item.X - 1 ) * 48, ( droppable[1].Item.Y - 1 ) * 48 );
+						
+					end
 					
 				end
 				
@@ -178,6 +197,24 @@ function GM:RefreshInventory()
 		
 		if( bDoDrop and !receiver.Item ) then
 			
+			if( !GAMEMODE:GetMetaItem( droppable[1].Item.Class ).PrimaryWep ) then return end
+			
+			if( droppable[1].Item.X and droppable[1].Item.Y ) then
+				self.D.Inventory.Slots[droppable[1].Item.Y][droppable[1].Item.X].Item = nil;
+			end
+			
+			droppable[1].Item.X = 0;
+			droppable[1].Item.Y = 0;
+			droppable[1].Item.Primary = true;
+			droppable[1].Item.Secondary = false;
+			
+			receiver.Item = droppable[1];
+			
+			net.Start( "nEquipPrimary" );
+				net.WriteFloat( droppable[1].Item.Key );
+			net.SendToServer();
+			
+			self:RefreshInventory();
 			self:DeselectInventory();
 			
 		end
@@ -197,6 +234,24 @@ function GM:RefreshInventory()
 		
 		if( bDoDrop and !receiver.Item ) then
 			
+			if( !GAMEMODE:GetMetaItem( droppable[1].Item.Class ).SecondaryWep ) then return end
+			
+			if( droppable[1].Item.X and droppable[1].Item.Y ) then
+				self.D.Inventory.Slots[droppable[1].Item.Y][droppable[1].Item.X].Item = nil;
+			end
+			
+			droppable[1].Item.X = 0;
+			droppable[1].Item.Y = 0;
+			droppable[1].Item.Primary = false;
+			droppable[1].Item.Secondary = true;
+			
+			receiver.Item = droppable[1];
+			
+			net.Start( "nEquipSecondary" );
+				net.WriteFloat( droppable[1].Item.Key );
+			net.SendToServer();
+			
+			self:RefreshInventory();
 			self:DeselectInventory();
 			
 		end
@@ -205,14 +260,44 @@ function GM:RefreshInventory()
 	
 	for _, v in pairs( LocalPlayer().Inventory ) do
 		
-		local item = vgui.Create( "IItem", self.D.Inventory.Back );
-		item:SetPos( ( v.X - 1 ) * 48, ( v.Y - 1 ) * 48 );
-		item:SetSize( self:GetMetaItem( v.Class ).W * 48, self:GetMetaItem( v.Class ).H * 48 );
-		item:SetModel( self:GetMetaItem( v.Class ).Model );
-		item:Droppable( "Items" );
-		
-		item.Item = v;
-		self.D.Inventory.Slots[v.Y][v.X].Item = item;
+		if( v.X != 0 and v.Y != 0 ) then
+			
+			local item = vgui.Create( "IItem", self.D.Inventory.Back );
+			item:SetPos( ( v.X - 1 ) * 48, ( v.Y - 1 ) * 48 );
+			item:SetSize( self:GetMetaItem( v.Class ).W * 48, self:GetMetaItem( v.Class ).H * 48 );
+			item:SetModel( self:GetMetaItem( v.Class ).Model );
+			item:Droppable( "Items" );
+			
+			item.Item = v;
+			self.D.Inventory.Slots[v.Y][v.X].Item = item;
+			
+		else
+			
+			if( v.Primary ) then
+				
+				local item = vgui.Create( "IItem", self.D.Inventory.Primary );
+				item:SetPos( 0, 0 );
+				item:SetSize( self.D.Inventory.Primary:GetWide(), self.D.Inventory.Primary:GetTall() );
+				item:SetModel( self:GetMetaItem( v.Class ).Model );
+				item:Droppable( "Items" );
+				
+				item.Item = v;
+				self.D.Inventory.Primary.Item = item;
+				
+			elseif( v.Secondary ) then
+				
+				local item = vgui.Create( "IItem", self.D.Inventory.Secondary );
+				item:SetPos( 0, 0 );
+				item:SetSize( self.D.Inventory.Secondary:GetWide(), self.D.Inventory.Secondary:GetTall() );
+				item:SetModel( self:GetMetaItem( v.Class ).Model );
+				item:Droppable( "Items" );
+				
+				item.Item = v;
+				self.D.Inventory.Secondary.Item = item;
+				
+			end
+			
+		end
 		
 	end
 	

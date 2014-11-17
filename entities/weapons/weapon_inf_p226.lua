@@ -38,4 +38,10 @@ SWEP.Primary.Accuracy		= 0.07;
 SWEP.Primary.Delay			= 0.1;
 SWEP.Primary.ViewPunch		= Angle( -2, 0, 0 );
 
+SWEP.Description = "A P226 pistol.";
+SWEP.W = 3;
+SWEP.H = 2;
+SWEP.PrimaryWep = false;
+SWEP.SecondaryWep = true;
+
 SWEP.ZombieRadius			= 2000;
