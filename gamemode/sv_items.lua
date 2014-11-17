@@ -1,14 +1,10 @@
 local meta = FindMetaTable( "Player" );
 
-function meta:ClearInventory( save )
+function meta:ClearInventory()
 	
 	self.Inventory = { };
 	
-	if( save ) then
-		
-		mysqloo.Query( "DELETE FROM items WHERE SteamID = '" .. self:SteamID() .. "' AND CharID = '" .. self:CharID() .. "';" );
-		
-	end
+	mysqloo.Query( "DELETE FROM items WHERE SteamID = '" .. self:SteamID() .. "' AND CharID = '" .. self:CharID() .. "';" );
 	
 	net.Start( "nClearInventory" );
 	net.Send( self );
@@ -72,7 +68,7 @@ function meta:MoveItem( key, x, y )
 	
 	if( !self.Inventory[key] ) then return end
 	
-	if( self:IsInventorySlotOccupiedItem( x, y, GAMEMODE:GetMetaItem( self.Inventory[key].Class ).W, GAMEMODE:GetMetaItem( self.Inventory[key].Class ).H ) ) then return end
+	if( self:IsInventorySlotOccupiedItemFilter( x, y, GAMEMODE:GetMetaItem( self.Inventory[key].Class ).W, GAMEMODE:GetMetaItem( self.Inventory[key].Class ).H, key ) ) then return end
 	
 	mysqloo.Query( "UPDATE items SET X = '" .. x .. "', Y = '" .. y .. "' WHERE SteamID = '" .. self:SteamID() .. "' AND CharID = '" .. self:CharID() .. "' AND X = '" .. self.Inventory[key].X .. "' AND Y = '" .. self.Inventory[key].Y .. "';" );
 	
@@ -86,3 +82,14 @@ function meta:MoveItem( key, x, y )
 	self.Inventory[key].Y = y;
 	
 end
+
+local function nMoveItem( len, ply )
+	
+	local key = net.ReadFloat();
+	local x = net.ReadFloat();
+	local y = net.ReadFloat();
+	
+	ply:MoveItem( key, x, y );
+	
+end
+net.Receive( "nMoveItem", nMoveItem );

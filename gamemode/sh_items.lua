@@ -92,7 +92,37 @@ function meta:IsInventorySlotOccupiedItem( i, j, w, h )
 	
 end
 
-function meta:IsInventorySlotOccupied( x, y )
+function meta:IsInventorySlotOccupiedItemFilter( i, j, w, h, key )
+	
+	self:CheckInventory();
+	
+	if( i + w - 1 <= 6 and j + h - 1 <= 10 ) then -- If the item could potentially fit here
+		
+		local good = true;
+		
+		for x = 1, w do -- For each cell of the width of the item
+			
+			for y = 1, h do
+				
+				if( self:IsInventorySlotOccupied( i + x - 1, j + y - 1, key ) ) then
+					
+					good = false;
+					
+				end
+				
+			end
+			
+		end
+		
+		return !good;
+		
+	end
+	
+	return true;
+	
+end
+
+function meta:IsInventorySlotOccupied( x, y, key )
 	
 	self:CheckInventory();
 	
@@ -102,6 +132,7 @@ function meta:IsInventorySlotOccupied( x, y )
 			
 			if( y >= v.Y and y <= v.Y + GAMEMODE:GetMetaItem( v.Class ).H - 1 ) then
 				
+				if( key and v.Key == key ) then return false end
 				return true;
 				
 			end

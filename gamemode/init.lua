@@ -38,6 +38,7 @@ AddCSLuaFile( "sh_player.lua" );
 AddCSLuaFile( "sh_playerclass.lua" );
 AddCSLuaFile( "sh_sandbox.lua" );
 AddCSLuaFile( "sh_soundscripts.lua" );
+AddCSLuaFile( "gui/cl_inventory.lua" );
 AddCSLuaFile( "gui/cl_gui.lua" );
 AddCSLuaFile( "gui/cl_guiext.lua" );
 AddCSLuaFile( "gui/cl_skin.lua" );

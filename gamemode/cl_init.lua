@@ -10,6 +10,7 @@ include( "sh_player.lua" );
 include( "sh_playerclass.lua" );
 include( "sh_sandbox.lua" );
 include( "sh_soundscripts.lua" );
+include( "gui/cl_inventory.lua" );
 include( "gui/cl_gui.lua" );
 include( "gui/cl_guiext.lua" );
 include( "gui/cl_skin.lua" );

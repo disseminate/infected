@@ -1,6 +1,6 @@
 ITEM.Name = "Watermelon";
 ITEM.Desc = "A large green fruit, implemented in pretty much every RP gamemode.";
-ITEM.Model = "models/props_junk/watermelon.mdl";
+ITEM.Model = "models/props_junk/watermelon01.mdl";
 
 ITEM.W = 3;
 ITEM.H = 3;

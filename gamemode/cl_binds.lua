@@ -66,6 +66,13 @@ function GM:PlayerBindPress( ply, b, d )
 		
 	end
 	
+	if( d and b == "gm_showteam" ) then
+		
+		self:ShowF2();
+		return true;
+		
+	end
+	
 	if( d and b == "gm_showspare1" ) then
 		
 		self:ShowF3();
@@ -176,6 +183,12 @@ function GM:ShowF1()
 	self.D.F1.Text:SetAutoStretchVertical( true );
 	self.D.F1.Text:SetFont( "Infected.LabelSmall" );
 	self.D.F1.Text:SetText( "" );
+	
+end
+
+function GM:ShowF2()
+	
+	self:ShowInventory();
 	
 end
 
