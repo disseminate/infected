@@ -12,6 +12,50 @@ function meta:ClearInventory()
 	
 end
 
+function meta:GiveItemVars( class, vars )
+	
+	self:CheckInventory();
+	
+	local item = GAMEMODE:Item( class );
+	
+	local x, y = self:GetNextAvailableSlot( GAMEMODE:GetMetaItem( item.Class ).W, GAMEMODE:GetMetaItem( item.Class ).H );
+	
+	item.X = x;
+	item.Y = y;
+	item.Owner = self;
+	
+	if( vars and vars != { } ) then
+		item.Vars = table.Copy( vars );
+	end
+	
+	if( !self.NextItemKey ) then self.NextItemKey = 1 end
+	item.Key = self.NextItemKey;
+	self.NextItemKey = self.NextItemKey + 1;
+	
+	net.Start( "nGiveItem" );
+		net.WriteTable( item );
+	net.Send( self );
+	
+	local varstr = "";
+	for k, v in pairs( item.Vars ) do
+		varstr = varstr .. k .. "|" .. v .. ";"
+	end
+	
+	mysqloo.Query( "INSERT INTO items ( SteamID, CharID, Class, X, Y, Vars ) VALUES ( '" .. self:SteamID() .. "', '" .. self:CharID() .. "', '" .. item.Class .. "', '" .. item.X .. "', '" .. item.Y .. "', '" .. varstr .. "' )" );
+	
+	table.insert( self:GetItemDataByCharID( self:CharID() ), {
+		CharID = self:CharID(),
+		Class = item.Class,
+		SteamID = self:SteamID(),
+		Vars = varstr,
+		X = item.X,
+		Y = item.Y
+	} );
+	
+	self.Inventory[item.Key] = item;
+	
+end
+
 function meta:GiveItem( item )
 	
 	self:CheckInventory();
@@ -143,6 +187,30 @@ function meta:UseItem( key )
 	
 end
 
+function GM:CreateItemEnt( pos, ang, class, vars )
+	
+	local ent = ents.Create( "inf_item" );
+	ent:SetPos( pos );
+	ent:SetAngles( ang );
+	ent:SetItemClass( class );
+	
+	if( vars ) then
+		
+		ent:SetVars( vars );
+		
+	else
+		
+		ent:SetVars( self:Item( class ).Vars );
+		
+	end
+	
+	ent:Spawn();
+	ent:Activate();
+	
+	return ent;
+	
+end
+
 local function nMoveItem( len, ply )
 	
 	local key = net.ReadFloat();
@@ -162,6 +230,18 @@ local function nUseItem( len, ply )
 	
 end
 net.Receive( "nUseItem", nUseItem );
+
+local function nDropItem( len, ply )
+	
+	local key = net.ReadFloat();
+	
+	if( !ply.Inventory[key] ) then return end
+	
+	GAMEMODE:CreateItemEnt( ply:EyePos() + ply:GetAimVector() * 50, Angle(), ply.Inventory[key].Class, ply.Inventory[key].Vars );
+	ply:RemoveItem( key );
+	
+end
+net.Receive( "nDropItem", nDropItem );
 
 local function nDestroyItem( len, ply )
 	

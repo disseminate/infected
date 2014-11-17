@@ -321,6 +321,27 @@ local function SetCharCreateFlags( ply, cmd, args )
 end
 concommand.AddAdmin( "rpa_setcharcreateflags", SetCharCreateFlags );
 
+local function CreateItem( ply, cmd, args )
+	
+	if( !args[1] ) then
+		
+		ply:SendNet( "nNoValue" );
+		return;
+		
+	end
+	
+	if( !GAMEMODE:GetMetaItem( args[1] ) ) then
+		
+		ply:SendNet( "nInvalidValue" );
+		return;
+		
+	end
+	
+	GAMEMODE:CreateItemEnt( ply:EyePos() + ply:GetAimVector() * 50, Angle(), args[1] );
+	
+end
+concommand.AddAdmin( "rpa_createitem", CreateItem );
+
 local function AddSeeds( ply, cmd, args )
 	
 	GAMEMODE:Log( "admin", "Z", ply:Nick() .. " added walkable seeds.", ply );

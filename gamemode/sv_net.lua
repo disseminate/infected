@@ -30,8 +30,10 @@ util.AddNetworkString( "nRemoved" );
 util.AddNetworkString( "nMaxZombies" );
 
 util.AddNetworkString( "nClearInventory" );
+util.AddNetworkString( "nItemTooBig" );
 util.AddNetworkString( "nGiveItem" );
 util.AddNetworkString( "nRemoveItem" );
 util.AddNetworkString( "nMoveItem" );
 util.AddNetworkString( "nUseItem" );
+util.AddNetworkString( "nDropItem" );
 util.AddNetworkString( "nDestroyItem" );

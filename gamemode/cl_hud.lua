@@ -714,6 +714,47 @@ function GM:HUDPaintOthers()
 		
 	end
 	
+	local trace = { };
+	trace.start = LocalPlayer():EyePos();
+	trace.endpos = trace.start + LocalPlayer():GetAimVector() * 512;
+	trace.filter = LocalPlayer();
+	local tr = util.TraceLine( trace );
+	
+	for _, v in pairs( ents.FindByClass( "inf_item" ) ) do
+		
+		if( !v.HUDA ) then v.HUDA = 0 end
+		
+		local ts = ( v:GetPos() + v:OBBCenter() ):ToScreen();
+		
+		if( self.SeeAll or tr.Entity == v ) then
+			
+			v.HUDA = math.Approach( v.HUDA, 1, FrameTime() );
+			
+		else
+			
+			v.HUDA = math.Approach( v.HUDA, 0, FrameTime() );
+			
+		end
+		
+		if( v.HUDA > 0 ) then
+			
+			local metaitem = self:GetMetaItem( v:GetItemClass() );
+			
+			if( metaitem ) then
+				
+				local col = Color( 255, 255, 255, 255 * v.HUDA );
+				if( self.SeeAll ) then
+					col = Color( 0, 200, 255, 255 * v.HUDA );
+				end
+				
+				draw.DrawText( metaitem.Name, "Infected.PlayerName", ts.x, ts.y, col, 1 );
+				
+			end
+			
+		end
+		
+	end
+	
 	for _, v in pairs( ents.FindByClass( "inf_zombie" ) ) do
 		
 		if( !v.HUDA ) then v.HUDA = 0 end

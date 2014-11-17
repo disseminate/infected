@@ -51,6 +51,13 @@ local function nMoveItem( len )
 end
 net.Receive( "nMoveItem", nMoveItem );
 
+local function nItemTooBig( len )
+	
+	GAMEMODE:AddChat( { CB_ALL, CB_IC }, "Infected.ChatNormal", COLOR_ERROR, "You can't fit that in your inventory." );
+	
+end
+net.Receive( "nItemTooBig", nItemTooBig );
+
 function GM:ShowInventory()
 	
 	LocalPlayer():CheckInventory();
@@ -368,7 +375,14 @@ function GM:RefreshItemButtons()
 		self.D.Inventory.Drop:SetText( "Drop" );
 		function self.D.Inventory.Drop:DoClick()
 			
-			--
+			net.Start( "nDropItem" );
+				net.WriteFloat( item.Key );
+			net.SendToServer();
+			
+			LocalPlayer().Inventory[item.Key] = nil;
+			
+			GAMEMODE:RefreshInventory();
+			GAMEMODE:DeselectInventory();
 			
 		end
 		
