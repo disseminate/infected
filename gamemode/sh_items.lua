@@ -46,7 +46,7 @@ function GM:Item( class )
 	
 	local tab = { };
 	tab.Class = class;
-	tab.Vars = self:GetMetaItem( class ).Vars; -- Initialize default variables
+	tab.Vars = table.Copy( self:GetMetaItem( class ).Vars ); -- Initialize default variables
 	
 	return tab;
 	
@@ -68,9 +68,9 @@ function meta:IsInventorySlotOccupied( x, y )
 	
 	for _, v in pairs( self.Inventory ) do
 		
-		if( x > v.X and x <= v.X + GAMEMODE:GetMetaItem( v.Class ).W ) then
+		if( x >= v.X and x <= v.X + GAMEMODE:GetMetaItem( v.Class ).W - 1 ) then
 			
-			if( y > v.Y and y <= v.Y + GAMEMODE:GetMetaItem( v.Class ).H ) then
+			if( y >= v.Y and y <= v.Y + GAMEMODE:GetMetaItem( v.Class ).H - 1 ) then
 				
 				return true;
 				
@@ -88,38 +88,31 @@ function meta:GetNextAvailableSlot( w, h )
 	
 	self:CheckInventory();
 	
-	local x = 1;
-	local y = 1;
-	
-	for i = 1, 6 do
+	for j = 1, 10 do -- For each inventory slot (i, j)
 		
-		for j = 1, 10 do
+		for i = 1, 6 do
 			
-			if( !self:IsInventorySlotOccupied( i, j ) ) then
+			if( i + w - 1 <= 6 and j + h - 1 <= 10 ) then -- If the item could potentially fit here
 				
 				local good = true;
 				
-				if( x + w <= 6 or y + h <= 10 ) then
+				for x = 1, w do -- For each cell of the width of the item
 					
-					for x = 1, w do
+					for y = 1, h do
 						
-						for y = 1, h do
+						if( self:IsInventorySlotOccupied( i + x - 1, j + y - 1 ) ) then
 							
-							if( self:IsInventorySlotOccupied( x, y ) ) then
-								
-								good = false;
-								
-							end
+							good = false;
 							
 						end
 						
 					end
 					
-					if( good ) then
-						
-						return i, j;
-						
-					end
+				end
+				
+				if( good ) then
+					
+					return i, j;
 					
 				end
 				
