@@ -126,22 +126,3 @@ function meta:GetNextAvailableSlot( w, h )
 	
 end
 
-function meta:GiveItem( item )
-	
-	self:CheckInventory();
-	
-	if( type( item ) == "string" ) then
-		
-		item = GAMEMODE:Item( item );
-		
-	end
-	
-	local x, y = self:GetNextAvailableSlot( GAMEMODE:GetMetaItem( item.Class ).W, GAMEMODE:GetMetaItem( item.Class ).H );
-	
-	item.X = x;
-	item.Y = y;
-	item.Owner = self;
-	
-	table.insert( self.Inventory, item );
-	
-end

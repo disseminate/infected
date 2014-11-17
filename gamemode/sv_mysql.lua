@@ -155,12 +155,9 @@ SQLStructure["chars"] = {
 SQLStructure["items"] = {
 	{ "CharID", "INT" },
 	{ "Class", "TEXT" },
-	{ "x", "INT" },
-	{ "y", "INT" },
-	{ "var1", "TEXT" },
-	{ "var2", "TEXT" },
-	{ "var3", "TEXT" },
-	{ "var4", "TEXT" },
+	{ "X", "INT" },
+	{ "Y", "INT" },
+	{ "Vars", "TEXT" },
 };
 
 function GM:InitSQLTables()

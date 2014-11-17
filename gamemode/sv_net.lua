@@ -28,3 +28,7 @@ util.AddNetworkString( "nSetToolTrust" );
 util.AddNetworkString( "nSetCharCreateFlags" );
 util.AddNetworkString( "nRemoved" );
 util.AddNetworkString( "nMaxZombies" );
+
+util.AddNetworkString( "nClearInventory" );
+util.AddNetworkString( "nGiveItem" );
+util.AddNetworkString( "nRemoveItem" );
