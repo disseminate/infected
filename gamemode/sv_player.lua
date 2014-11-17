@@ -218,6 +218,7 @@ function meta:LoadCharacter( id )
 	
 	self:SetCharID( id );
 	self:LoadCharacterData( self:GetDataByCharID( id ) );
+	self:LoadItemData( self:GetItemDataByCharID( id ) );
 	self:PostLoadCharacter();
 	
 end
@@ -234,6 +235,50 @@ function meta:LoadCharacterData( data )
 	self:SetModel( data.Model );
 	self:SetSubMaterial( self:GetFacemap(), data.Face );
 	self:SetSubMaterial( self:GetClothesSheet(), data.Clothes );
+	
+end
+
+function meta:LoadItemData( data )
+	
+	self.Inventory = { };
+	net.Start( "nClearInventory" );
+	net.Send( self );
+	
+	for _, v in pairs( data ) do
+		
+		local item = GAMEMODE:Item( v.Class );
+		
+		item.X = v.X;
+		item.Y = v.Y;
+		item.Owner = self;
+		
+		if( !self.NextItemKey ) then self.NextItemKey = 1 end
+		item.Key = self.NextItemKey;
+		self.NextItemKey = self.NextItemKey + 1;
+		
+		for _, n in pairs( string.Explode( ";", v.Vars ) ) do
+			
+			local kv = string.Explode( "|", n );
+			
+			if( tonumber( kv[2] ) ) then
+				
+				item.Vars[kv[1]] = tonumber( kv[2] );
+				
+			else
+				
+				item.Vars[kv[1]] = kv[2];
+				
+			end
+			
+		end
+		
+		net.Start( "nGiveItem" );
+			net.WriteTable( item );
+		net.Send( self );
+		
+		self.Inventory[item.Key] = item;
+		
+	end
 	
 end
 

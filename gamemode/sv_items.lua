@@ -5,6 +5,7 @@ function meta:ClearInventory()
 	self.Inventory = { };
 	
 	mysqloo.Query( "DELETE FROM items WHERE SteamID = '" .. self:SteamID() .. "' AND CharID = '" .. self:CharID() .. "';" );
+	GAMEMODE.ItemData[self:SteamID()][self:CharID()] = { };
 	
 	net.Start( "nClearInventory" );
 	net.Send( self );
@@ -42,6 +43,15 @@ function meta:GiveItem( item )
 	
 	mysqloo.Query( "INSERT INTO items ( SteamID, CharID, Class, X, Y, Vars ) VALUES ( '" .. self:SteamID() .. "', '" .. self:CharID() .. "', '" .. item.Class .. "', '" .. item.X .. "', '" .. item.Y .. "', '" .. varstr .. "' )" );
 	
+	table.insert( self:GetItemDataByCharID( self:CharID() ), {
+		CharID = self:CharID(),
+		Class = item.Class,
+		SteamID = self:SteamID(),
+		Vars = varstr,
+		X = item.X,
+		Y = item.Y
+	} );
+	
 	self.Inventory[item.Key] = item;
 	
 end
@@ -53,6 +63,16 @@ function meta:RemoveItem( key )
 	if( !self.Inventory[key] ) then return end
 	
 	mysqloo.Query( "DELETE FROM items WHERE SteamID = '" .. self:SteamID() .. "' AND CharID = '" .. self:CharID() .. "' AND X = '" .. self.Inventory[key].X .. "' AND Y = '" .. self.Inventory[key].Y .. "';" );
+	
+	for k, v in pairs( self:GetItemDataByCharID( self:CharID() ) ) do
+		
+		if( v.X == self.Inventory[key].X and v.Y == self.Inventory[key].Y ) then
+			
+			self:GetItemDataByCharID( self:CharID() )[k] = nil;
+			
+		end
+		
+	end
 	
 	net.Start( "nRemoveItem" );
 		net.WriteFloat( key );
@@ -72,6 +92,17 @@ function meta:MoveItem( key, x, y )
 	
 	mysqloo.Query( "UPDATE items SET X = '" .. x .. "', Y = '" .. y .. "' WHERE SteamID = '" .. self:SteamID() .. "' AND CharID = '" .. self:CharID() .. "' AND X = '" .. self.Inventory[key].X .. "' AND Y = '" .. self.Inventory[key].Y .. "';" );
 	
+	for k, v in pairs( self:GetItemDataByCharID( self:CharID() ) ) do
+		
+		if( v.X == self.Inventory[key].X and v.Y == self.Inventory[key].Y ) then
+			
+			v.X = x;
+			v.Y = y;
+			
+		end
+		
+	end
+	
 	net.Start( "nMoveItem" );
 		net.WriteFloat( key );
 		net.WriteFloat( x );
@@ -80,6 +111,35 @@ function meta:MoveItem( key, x, y )
 	
 	self.Inventory[key].X = x;
 	self.Inventory[key].Y = y;
+	
+end
+
+function meta:UseItem( key )
+	
+	self:CheckInventory();
+	
+	if( !self.Inventory[key] ) then return end
+	
+	local item = self.Inventory[key];
+	local metaitem = GAMEMODE:GetMetaItem( item.Class );
+	
+	metaitem:OnUse( item );
+	
+	if( item.Vars.Uses ) then
+		
+		item.Vars.Uses = item.Vars.Uses - 1;
+		
+		if( item.Vars.Uses == 0 ) then
+			
+			self:RemoveItem( key );
+			
+		else
+			
+			self:UpdateItemVars( key );
+			
+		end
+		
+	end
 	
 end
 
@@ -93,3 +153,21 @@ local function nMoveItem( len, ply )
 	
 end
 net.Receive( "nMoveItem", nMoveItem );
+
+local function nUseItem( len, ply )
+	
+	local key = net.ReadFloat();
+	
+	ply:UseItem( key );
+	
+end
+net.Receive( "nUseItem", nUseItem );
+
+local function nDestroyItem( len, ply )
+	
+	local key = net.ReadFloat();
+	
+	ply:RemoveItem( key );
+	
+end
+net.Receive( "nDestroyItem", nDestroyItem );

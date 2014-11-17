@@ -18,6 +18,12 @@ function PANEL:Paint( w, h )
 
 end
 
+function PANEL:OnMousePressed()
+	
+	GAMEMODE:DeselectInventory();
+	
+end
+
 derma.DefineControl( "IInventorySquare", "", PANEL, "EditablePanel" );
 
 local PANEL = { };
@@ -59,7 +65,7 @@ function PANEL:GetModel()
 	
 end
 
-function PANEL:Paint()
+function PANEL:Paint( w, h )
 	
 	if( !IsValid( self.Entity ) ) then return end
 	
@@ -89,10 +95,10 @@ function PANEL:Paint()
 		cam.IgnoreZ( false )
 	cam.End3D()
 	
-	if( self.Dark ) then
+	if( self.Selected ) then
 		
-		surface.SetDrawColor( Color( 0, 0, 0, 200 ) );
-		surface.DrawRect( 0, 0, ScrW(), ScrH() );
+		surface.SetDrawColor( Color( 255, 255, 255, 255 ) );
+		surface.DrawOutlinedRect( 0, 0, w, h );
 		
 	end
 	
@@ -114,6 +120,8 @@ function PANEL:OnMousePressed( code )
 		self:DragMousePress( code );
 		
 	end
+	
+	GAMEMODE:HandleItemClick( self, self.Item );
 	
 end
 

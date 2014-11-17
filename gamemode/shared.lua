@@ -632,6 +632,20 @@ function meta:GetIndexByCharID( id )
 	
 end
 
+function meta:GetItemDataByCharID( id )
+	
+	for k, v in pairs( GAMEMODE.ItemData[self:SteamID()] ) do
+		
+		if( k == id ) then
+			
+			return v;
+			
+		end
+		
+	end
+	
+end
+
 function meta:FindPlayer( str )
 	
 	if( str == "^" ) then return self end

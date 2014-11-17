@@ -9,7 +9,13 @@ ITEM.Vars.Uses = 4;
 
 ITEM.RemoveOnUse = true;
 
-ITEM.OnUse = function( item )
+function ITEM:GetUseText( item )
+	
+	return "Eat (" .. item.Vars.Uses .. "/4)";
+	
+end
+
+function ITEM:OnUse( item )
 	
 	if( SERVER ) then
 		

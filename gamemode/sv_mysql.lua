@@ -251,6 +251,7 @@ end
 
 GM.PlayerData = { };
 GM.CharData = { };
+GM.ItemData = { };
 
 function meta:PreloadPlayer()
 	
@@ -307,6 +308,29 @@ function meta:PreloadCharacters()
 		net.Send( self );
 		
 		MsgC( Color( 128, 128, 128, 255 ), "Preloaded character data for " .. self:Nick() .. ".\n" );
+		
+		GAMEMODE.ItemData[self:SteamID()] = { };
+		
+		for _, v in pairs( res ) do
+			
+			MsgC( Color( 128, 128, 128, 255 ), "Preloading character items for CharID " .. v.id .. "...\n" );
+			
+			mysqloo.Query( "SELECT * FROM items WHERE SteamID = '" .. self:SteamID() .. "' AND CharID = '" .. v.id .. "'", function( res )
+				
+				if( !self or !self:IsValid() ) then
+					
+					MsgC( Color( 128, 128, 128, 255 ), "Disconnect while preloading item data.\n" );
+					return;
+					
+				end
+				
+				GAMEMODE.ItemData[self:SteamID()][v.id] = res;
+				
+				MsgC( Color( 128, 128, 128, 255 ), "Preloaded item data for CharID " .. v.id .. ".\n" );
+				
+			end );
+			
+		end
 		
 	end
 	
@@ -420,5 +444,26 @@ function meta:UpdateCharacterField( field, val )
 	
 	GAMEMODE.CharData[self:SteamID()][self:GetIndexByCharID( self:CharID() )][field] = val;
 	mysqloo.Query( "UPDATE chars SET " .. field .. " = '" .. mysqloo.Escape( val ) .. "' WHERE id = '" .. self:CharID() .. "'", qs );
+	
+end
+
+function meta:UpdateItemVars( key )
+	
+	local varstr = "";
+	for k, v in pairs( self.Inventory[key].Vars ) do
+		varstr = varstr .. k .. "|" .. v .. ";"
+	end
+	
+	mysqloo.Query( "UPDATE items SET Vars = '" .. varstr .. "' WHERE SteamID = '" .. self:SteamID() .. "' AND CharID = '" .. self:CharID() .. "' AND X = '" .. self.Inventory[key].X .. "' AND Y = '" .. self.Inventory[key].Y .. "'", qs );
+	
+	for k, v in pairs( self:GetItemDataByCharID( self:CharID() ) ) do
+		
+		if( v.X == self.Inventory[key].X and v.Y == self.Inventory[key].Y ) then
+			
+			v.Vars = varstr;
+			
+		end
+		
+	end
 	
 end

@@ -33,3 +33,5 @@ util.AddNetworkString( "nClearInventory" );
 util.AddNetworkString( "nGiveItem" );
 util.AddNetworkString( "nRemoveItem" );
 util.AddNetworkString( "nMoveItem" );
+util.AddNetworkString( "nUseItem" );
+util.AddNetworkString( "nDestroyItem" );
