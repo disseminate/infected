@@ -516,3 +516,31 @@ function GM:ShowPlayerCard( ply, me )
 	end
 	
 end
+
+function GM:KeyPress( ply, key )
+	
+	if( key == IN_RELOAD ) then
+		
+		if( ply:GetActiveWeapon() and ply:GetActiveWeapon():IsValid() and ply:GetActiveWeapon().ItemAmmo ) then
+			
+			
+			
+		end
+		
+	end
+	
+end
+
+function GM:KeyRelease( ply, key )
+	
+	if( key == IN_RELOAD ) then
+		
+		if( ply:GetActiveWeapon() and ply:GetActiveWeapon():IsValid() and ply:GetActiveWeapon().ItemAmmo ) then
+			
+			
+			
+		end
+		
+	end
+	
+end

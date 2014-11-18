@@ -27,8 +27,8 @@ SWEP.AimAng = Angle( 0.6, 0.02, 1.5 );
 SWEP.Firearm = true;
 
 SWEP.Primary.ClipSize 		= 18;
-SWEP.Primary.DefaultClip 	= 18;
-SWEP.Primary.Ammo			= "pistol";
+SWEP.Primary.DefaultClip 	= 0;
+SWEP.Primary.Ammo			= "";
 SWEP.Primary.InfiniteAmmo	= true;
 SWEP.Primary.Automatic		= false;
 SWEP.Primary.Sound			= "Weapon_P226.Single";
@@ -46,5 +46,7 @@ SWEP.SecondaryWep = true;
 SWEP.CamPos = Vector( 200, 0, 0 );
 SWEP.FOV = 4;
 SWEP.LookAt = Vector( 0, 0, -2 );
+
+SWEP.ItemAmmo = "9mmrounds";
 
 SWEP.ZombieRadius			= 2000;
