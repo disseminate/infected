@@ -267,6 +267,18 @@ function meta:LoadItemData( data )
 			
 		end
 		
+		if( item.Primary or item.Secondary ) then
+			
+			self:Give( item.Class );
+			
+			if( item.Vars.Clip ) then
+				
+				self:GetWeapon( item.Class ):SetClip1( item.Vars.Clip );
+				
+			end
+			
+		end
+		
 		net.Start( "nGiveItem" );
 			net.WriteTable( item );
 		net.Send( self );

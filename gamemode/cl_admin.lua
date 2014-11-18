@@ -194,6 +194,23 @@ local function nMaxZombies( len )
 end
 net.Receive( "nMaxZombies", nMaxZombies );
 
+local function nItemsList( len )
+	
+	local filter = net.ReadString();
+	
+	for _, v in pairs( GAMEMODE.MetaItems ) do
+		
+		if( string.find( v.Class, filter ) ) then
+			
+			MsgC( COLOR_NOTIFY, v.Class .. "\t\t\t" .. v.Name .. "\n" );
+			
+		end
+		
+	end
+	
+end
+net.Receive( "nItemsList", nItemsList );
+
 local function SeeAll( ply, cmd, args )
 	
 	if( !GAMEMODE.SeeAll ) then GAMEMODE.SeeAll = false end

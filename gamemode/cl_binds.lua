@@ -44,6 +44,36 @@ function GM:ToggleHolsterThink()
 	
 end
 
+function GM:GetWeaponSlot()
+	
+	if( !LocalPlayer():GetActiveWeapon() or !LocalPlayer():GetActiveWeapon():IsValid() ) then return 1 end
+	if( LocalPlayer():GetActiveWeapon():GetClass() == "weapon_inf_hands" ) then return 1 end
+	if( LocalPlayer():GetActiveWeapon().PrimaryWep ) then return 2 end
+	if( LocalPlayer():GetActiveWeapon().SecondaryWep ) then return 3 end
+	if( LocalPlayer():GetActiveWeapon():GetClass() == "weapon_physgun" ) then return 4 end
+	if( LocalPlayer():GetActiveWeapon():GetClass() == "weapon_toolgun" ) then return 5 end
+	
+	return 1;
+	
+end
+
+function GM:GetWeaponBySlot( i )
+	
+	if( i == 1 ) then return "weapon_inf_hands" end
+	if( i == 4 ) then return "weapon_physgun" end
+	if( i == 5 ) then return "weapon_toolgun" end
+	
+	for _, v in pairs( LocalPlayer():GetWeapons() ) do
+		
+		if( i == 2 and v:GetTable().PrimaryWep ) then return v:GetClass() end
+		if( i == 3 and v:GetTable().SecondaryWep ) then return v:GetClass() end
+		
+	end
+	
+	return "";
+	
+end
+
 function GM:PlayerBindPress( ply, b, d )
 	
 	if( d and b == "+jump" and self.IntroMode == 1 and !self.StartFadeIntro ) then
@@ -130,6 +160,86 @@ function GM:PlayerBindPress( ply, b, d )
 			end
 			
 		end
+		
+		return true;
+		
+	end
+	
+	if( d and string.find( b, "slot" ) ) then
+		
+		if( !LocalPlayer():GetActiveWeapon() or !LocalPlayer():GetActiveWeapon():IsValid() ) then return true end
+		
+		local n = string.gsub( b, "slot", "" );
+		
+		if( tonumber( n ) and tonumber( n ) >= 1 and tonumber( n ) <= 5 ) then
+			
+			local wep = self:GetWeaponBySlot( tonumber( n ) );
+			
+			if( LocalPlayer():HasWeapon( wep ) ) then
+				
+				net.Start( "nSelectWeapon" );
+					net.WriteString( wep );
+				net.SendToServer();
+				
+			end
+			
+		end
+		
+		return true;
+		
+	end
+	
+	if( d and b == "invnext" ) then
+		
+		if( !LocalPlayer():GetActiveWeapon() or !LocalPlayer():GetActiveWeapon():IsValid() ) then return true end
+		
+		if( !self.WeaponSlot ) then self.WeaponSlot = self:GetWeaponSlot(); end
+		
+		self.WeaponSlot = self.WeaponSlot + 1;
+		
+		if( self.WeaponSlot > 5 ) then self.WeaponSlot = 1 end
+		
+		local wep = self:GetWeaponBySlot( self.WeaponSlot );
+		
+		while( !LocalPlayer():HasWeapon( wep ) ) do
+			
+			self.WeaponSlot = self.WeaponSlot + 1;
+			if( self.WeaponSlot > 5 ) then self.WeaponSlot = 1 end
+			wep = self:GetWeaponBySlot( self.WeaponSlot );
+			
+		end
+		
+		net.Start( "nSelectWeapon" );
+			net.WriteString( wep );
+		net.SendToServer();
+		
+		return true;
+		
+	end
+	
+	if( d and b == "invprev" ) then
+		
+		if( !LocalPlayer():GetActiveWeapon() or !LocalPlayer():GetActiveWeapon():IsValid() ) then return true end
+		
+		if( !self.WeaponSlot ) then self.WeaponSlot = self:GetWeaponSlot(); end
+		
+		self.WeaponSlot = self.WeaponSlot - 1;
+		
+		if( self.WeaponSlot < 1 ) then self.WeaponSlot = 5 end
+		
+		local wep = self:GetWeaponBySlot( self.WeaponSlot );
+		
+		while( !LocalPlayer():HasWeapon( wep ) ) do
+			
+			self.WeaponSlot = self.WeaponSlot - 1;
+			if( self.WeaponSlot < 1 ) then self.WeaponSlot = 5 end
+			wep = self:GetWeaponBySlot( self.WeaponSlot );
+			
+		end
+		
+		net.Start( "nSelectWeapon" );
+			net.WriteString( wep );
+		net.SendToServer();
 		
 		return true;
 		

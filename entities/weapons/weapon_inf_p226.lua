@@ -43,5 +43,8 @@ SWEP.W = 3;
 SWEP.H = 2;
 SWEP.PrimaryWep = false;
 SWEP.SecondaryWep = true;
+SWEP.CamPos = Vector( 200, 0, 0 );
+SWEP.FOV = 4;
+SWEP.LookAt = Vector( 0, 0, -2 );
 
 SWEP.ZombieRadius			= 2000;

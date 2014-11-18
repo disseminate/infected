@@ -2,9 +2,20 @@ local meta = FindMetaTable( "Player" );
 
 function meta:ClearInventory()
 	
+	for _, v in pairs( self.Inventory ) do
+		
+		if( v.Primary or v.Secondary ) then
+			
+			self:StripWeapon( v.Class );
+			
+		end
+		
+	end
+	
 	self.Inventory = { };
 	
 	mysqloo.Query( "DELETE FROM items WHERE SteamID = '" .. self:SteamID() .. "' AND CharID = '" .. self:CharID() .. "';" );
+	
 	GAMEMODE.ItemData[self:SteamID()][self:CharID()] = { };
 	
 	net.Start( "nClearInventory" );
@@ -134,6 +145,12 @@ function meta:RemoveItem( key )
 		
 	end
 	
+	if( self:GetMetaItem( self.Inventory[key].Class ).PrimaryWep or self:GetMetaItem( self.Inventory[key].Class ).SecondaryWep ) then
+		
+		self:StripWeapon( self.Inventory[key].Class );
+		
+	end
+	
 	net.Start( "nRemoveItem" );
 		net.WriteFloat( key );
 	net.Send( self );
@@ -147,6 +164,18 @@ function meta:MoveItem( key, x, y )
 	self:CheckInventory();
 	
 	if( !self.Inventory[key] ) then return end
+	
+	if( self.Inventory[key].Primary ) then
+		
+		self:MoveItemEquipped( key, x, y, true );
+		return;
+		
+	elseif( self.Inventory[key].Secondary ) then
+		
+		self:MoveItemEquipped( key, x, y, false );
+		return;
+		
+	end
 	
 	if( self:IsInventorySlotOccupiedItemFilter( x, y, GAMEMODE:GetMetaItem( self.Inventory[key].Class ).W, GAMEMODE:GetMetaItem( self.Inventory[key].Class ).H, key ) ) then return end
 	
@@ -171,6 +200,48 @@ function meta:MoveItem( key, x, y )
 	
 	self.Inventory[key].X = x;
 	self.Inventory[key].Y = y;
+	
+end
+
+function meta:MoveItemEquipped( key, x, y, p )
+	
+	if( self:IsInventorySlotOccupiedItemFilter( x, y, GAMEMODE:GetMetaItem( self.Inventory[key].Class ).W, GAMEMODE:GetMetaItem( self.Inventory[key].Class ).H, key ) ) then return end
+	
+	local primary = "PrimaryEquipped = '1'";
+	
+	if( !p ) then
+		
+		primary = "SecondaryEquipped = '1'";
+		
+	end
+	
+	mysqloo.Query( "UPDATE items SET X = '" .. x .. "', Y = '" .. y .. "', PrimaryEquipped = '0', SecondaryEquipped = '0' WHERE SteamID = '" .. self:SteamID() .. "' AND CharID = '" .. self:CharID() .. "' AND " .. primary );
+	
+	for k, v in pairs( self:GetItemDataByCharID( self:CharID() ) ) do
+		
+		if( v.X == self.Inventory[key].X and v.Y == self.Inventory[key].Y ) then
+			
+			v.X = x;
+			v.Y = y;
+			v.Primary = false;
+			v.Secondary = false;
+			
+		end
+		
+	end
+	
+	net.Start( "nMoveItem" );
+		net.WriteFloat( key );
+		net.WriteFloat( x );
+		net.WriteFloat( y );
+	net.Send( self );
+	
+	self.Inventory[key].X = x;
+	self.Inventory[key].Y = y;
+	self.Inventory[key].Primary = false;
+	self.Inventory[key].Secondary = false;
+	
+	self:StripWeapon( self.Inventory[key].Class );
 	
 end
 
@@ -295,6 +366,14 @@ local function nEquipPrimary( len, ply )
 	ply.Inventory[key].Primary = true;
 	ply.Inventory[key].Secondary = false;
 	
+	ply:Give( ply.Inventory[key].Class );
+	
+	if( ply.Inventory[key].Vars.Clip ) then
+		
+		ply:GetWeapon( ply.Inventory[key].Class ):SetClip1( ply.Inventory[key].Vars.Clip );
+		
+	end
+	
 end
 net.Receive( "nEquipPrimary", nEquipPrimary );
 
@@ -324,6 +403,14 @@ local function nEquipSecondary( len, ply )
 	ply.Inventory[key].Y = 0;
 	ply.Inventory[key].Primary = false;
 	ply.Inventory[key].Secondary = true;
+	
+	ply:Give( ply.Inventory[key].Class );
+	
+	if( ply.Inventory[key].Vars.Clip ) then
+		
+		ply:GetWeapon( ply.Inventory[key].Class ):SetClip1( ply.Inventory[key].Vars.Clip );
+		
+	end
 	
 end
 net.Receive( "nEquipSecondary", nEquipSecondary );

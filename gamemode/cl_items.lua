@@ -144,6 +144,8 @@ function GM:RefreshInventory()
 						
 						droppable[1].Item.X = receiver.ItemX;
 						droppable[1].Item.Y = receiver.ItemY;
+						droppable[1].Item.Primary = false;
+						droppable[1].Item.Secondary = false;
 						
 						net.Start( "nMoveItem" );
 							net.WriteFloat( droppable[1].Item.Key );
@@ -157,6 +159,8 @@ function GM:RefreshInventory()
 						
 						LocalPlayer().Inventory[key].X = x;
 						LocalPlayer().Inventory[key].Y = y;
+						LocalPlayer().Inventory[key].Primary = false;
+						LocalPlayer().Inventory[key].Secondary = false;
 						
 						droppable[1]:SetPos( ( droppable[1].Item.X - 1 ) * 48, ( droppable[1].Item.Y - 1 ) * 48 );
 						
@@ -248,15 +252,17 @@ function GM:RefreshInventory()
 	
 	for _, v in pairs( LocalPlayer().Inventory ) do
 		
+		local metaitem = self:GetMetaItem( v.Class );
+		
 		if( v.X != 0 and v.Y != 0 ) then
 			
 			local item = vgui.Create( "IItem", self.D.Inventory.Back );
 			item:SetPos( ( v.X - 1 ) * 48, ( v.Y - 1 ) * 48 );
-			item:SetSize( self:GetMetaItem( v.Class ).W * 48, self:GetMetaItem( v.Class ).H * 48 );
-			item:SetModel( self:GetMetaItem( v.Class ).Model );
+			item:SetSize( metaitem.W * 48, metaitem.H * 48 );
+			item.Item = v;
+			item:SetModel( metaitem.Model );
 			item:Droppable( "Items" );
 			
-			item.Item = v;
 			self.D.Inventory.Slots[v.Y][v.X].Item = item;
 			
 		else
@@ -266,10 +272,10 @@ function GM:RefreshInventory()
 				local item = vgui.Create( "IItem", self.D.Inventory.Primary );
 				item:SetPos( 0, 0 );
 				item:SetSize( self.D.Inventory.Primary:GetWide(), self.D.Inventory.Primary:GetTall() );
-				item:SetModel( self:GetMetaItem( v.Class ).Model );
+				item.Item = v;
+				item:SetModel( metaitem.Model );
 				item:Droppable( "Items" );
 				
-				item.Item = v;
 				self.D.Inventory.Primary.Item = item;
 				
 			elseif( v.Secondary ) then
@@ -277,10 +283,10 @@ function GM:RefreshInventory()
 				local item = vgui.Create( "IItem", self.D.Inventory.Secondary );
 				item:SetPos( 0, 0 );
 				item:SetSize( self.D.Inventory.Secondary:GetWide(), self.D.Inventory.Secondary:GetTall() );
-				item:SetModel( self:GetMetaItem( v.Class ).Model );
+				item.Item = v;
+				item:SetModel( metaitem.Model );
 				item:Droppable( "Items" );
 				
-				item.Item = v;
 				self.D.Inventory.Secondary.Item = item;
 				
 			end
@@ -305,6 +311,13 @@ function GM:DeselectInventory()
 			
 		end
 		
+	end
+	
+	if( self.D.Inventory.Primary.Item ) then
+		self.D.Inventory.Primary.Item.Selected = false;
+	end
+	if( self.D.Inventory.Secondary.Item ) then
+		self.D.Inventory.Secondary.Item.Selected = false;
 	end
 	
 	if( self.D.Inventory.T ) then
@@ -355,12 +368,31 @@ function GM:HandleItemClick( panel, item )
 		
 	end
 	
+	if( self.D.Inventory.Primary.Item ) then
+		self.D.Inventory.Primary.Item.Selected = false;
+	end
+	if( self.D.Inventory.Secondary.Item ) then
+		self.D.Inventory.Secondary.Item.Selected = false;
+	end
+	
 	panel.Selected = true;
 	self:RefreshItemButtons();
 	
 end
 
 function GM:GetSelectedItem()
+	
+	if( self.D.Inventory.Primary.Item and self.D.Inventory.Primary.Item.Selected ) then
+		
+		return self.D.Inventory.Primary.Item;
+		
+	end
+	
+	if( self.D.Inventory.Secondary.Item and self.D.Inventory.Secondary.Item.Selected ) then
+		
+		return self.D.Inventory.Secondary.Item;
+		
+	end
 	
 	for j = 1, 10 do
 		
@@ -408,7 +440,7 @@ function GM:RefreshItemButtons()
 		if( metaitem.GetUseText and metaitem.OnUse ) then
 			
 			self.D.Inventory.Use = vgui.Create( "DButton", self.D.Inventory );
-			self.D.Inventory.Use:SetPos( 800 - 10 - 128, 70 + 48 * 10 - 200 + 20 );
+			self.D.Inventory.Use:SetPos( 800 - 10 - 128, 34 + ( 48 * 10 ) - 30 - 40 - 40 );
 			self.D.Inventory.Use:SetSize( 128, 30 );
 			self.D.Inventory.Use:SetFont( "Infected.TinyTitle" );
 			self.D.Inventory.Use:SetText( metaitem:GetUseText( item ) );
@@ -442,7 +474,7 @@ function GM:RefreshItemButtons()
 		end
 		
 		self.D.Inventory.Drop = vgui.Create( "DButton", self.D.Inventory );
-		self.D.Inventory.Drop:SetPos( 800 - 10 - 128, 70 + 48 * 10 - 200 + 20 + 40 );
+		self.D.Inventory.Drop:SetPos( 800 - 10 - 128, 34 + ( 48 * 10 ) - 30 - 40 );
 		self.D.Inventory.Drop:SetSize( 128, 30 );
 		self.D.Inventory.Drop:SetFont( "Infected.TinyTitle" );
 		self.D.Inventory.Drop:SetText( "Drop" );
@@ -460,7 +492,7 @@ function GM:RefreshItemButtons()
 		end
 		
 		self.D.Inventory.Destroy = vgui.Create( "DButton", self.D.Inventory );
-		self.D.Inventory.Destroy:SetPos( 800 - 10 - 128, 70 + 48 * 10 - 200 + 20 + 40 + 40 );
+		self.D.Inventory.Destroy:SetPos( 800 - 10 - 128, 34 + ( 48 * 10 ) - 30 );
 		self.D.Inventory.Destroy:SetSize( 128, 30 );
 		self.D.Inventory.Destroy:SetFont( "Infected.TinyTitle" );
 		self.D.Inventory.Destroy:SetText( "Destroy" );

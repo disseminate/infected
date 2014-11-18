@@ -20,6 +20,7 @@ util.AddNetworkString( "nNoTargetFound" );
 util.AddNetworkString( "nNoValue" );
 util.AddNetworkString( "nNoDuration" );
 util.AddNetworkString( "nInvalidValue" );
+util.AddNetworkString( "nItemsList" );
 
 util.AddNetworkString( "nKicked" );
 util.AddNetworkString( "nBanned" );
@@ -39,3 +40,4 @@ util.AddNetworkString( "nDropItem" );
 util.AddNetworkString( "nDestroyItem" );
 util.AddNetworkString( "nEquipPrimary" );
 util.AddNetworkString( "nEquipSecondary" );
+util.AddNetworkString( "nSelectWeapon" );

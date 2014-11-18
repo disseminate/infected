@@ -325,14 +325,18 @@ local function CreateItem( ply, cmd, args )
 	
 	if( !args[1] ) then
 		
-		ply:SendNet( "nNoValue" );
+		net.Start( "nItemsList" );
+			net.WriteString( "" );
+		net.Send( ply );
 		return;
 		
 	end
 	
 	if( !GAMEMODE:GetMetaItem( args[1] ) ) then
 		
-		ply:SendNet( "nInvalidValue" );
+		net.Start( "nItemsList" );
+			net.WriteString( args[1] );
+		net.Send( ply );
 		return;
 		
 	end

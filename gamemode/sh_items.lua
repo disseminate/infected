@@ -55,6 +55,10 @@ function GM:PostGamemodeLoaded()
 			ITEM.PrimaryWep = v.PrimaryWep;
 			ITEM.SecondaryWep = v.SecondaryWep;
 			
+			ITEM.CamPos = v.CamPos;
+			ITEM.FOV = v.FOV;
+			ITEM.LookAt = v.LookAt;
+			
 			ITEM.Class = v.ClassName;
 			
 			GAMEMODE.MetaItems[v.ClassName] = ITEM;

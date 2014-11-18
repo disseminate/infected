@@ -844,6 +844,12 @@ end
 
 function SWEP:Reload()
 	
+	
+	
+end
+
+function SWEP:ReloadItem()
+	
 	if( self.Owner:Holstered() ) then return end
 	if( !self.Firearm ) then return end
 	if( !self.CanReload ) then return end

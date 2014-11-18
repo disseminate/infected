@@ -16,3 +16,11 @@ local function nToggleHolster( len, ply )
 	
 end
 net.Receive( "nToggleHolster", nToggleHolster );
+
+local function nSelectWeapon( len, ply )
+	
+	local class = net.ReadString();
+	ply:SelectWeapon( class );
+	
+end
+net.Receive( "nSelectWeapon", nSelectWeapon );

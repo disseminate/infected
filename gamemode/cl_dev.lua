@@ -163,3 +163,14 @@ function ccCreateModelViewer( ply, cmd, args )
 	
 end
 concommand.Add( "dev_modelviewer", ccCreateModelViewer );
+
+function ccCreateItemViewer( ply, cmd, args )
+	
+	local g = vgui.Create( "IIconEditor" );
+	g:SetModel( args[1] );
+	g:Refresh()
+	g:MakePopup()
+	g:Center()
+	
+end
+concommand.Add( "dev_itemviewer", ccCreateItemViewer );

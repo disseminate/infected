@@ -714,19 +714,16 @@ function GM:HUDPaintOthers()
 		
 	end
 	
-	local trace = { };
-	trace.start = LocalPlayer():EyePos();
-	trace.endpos = trace.start + LocalPlayer():GetAimVector() * 512;
-	trace.filter = LocalPlayer();
-	local tr = util.TraceLine( trace );
-	
 	for _, v in pairs( ents.FindByClass( "inf_item" ) ) do
 		
 		if( !v.HUDA ) then v.HUDA = 0 end
 		
-		local ts = ( v:GetPos() + v:OBBCenter() ):ToScreen();
+		--local pos = v:GetPos();
+		local a, b = v:GetRotatedAABB( v:OBBMins(), v:OBBMaxs() )
+		local pos = v:GetPos() + ( a + b ) / 2;
+		local ts = pos:ToScreen();
 		
-		if( self.SeeAll or tr.Entity == v ) then
+		if( self.SeeAll or pos:Distance( LocalPlayer():EyePos() ) < 768 ) then
 			
 			v.HUDA = math.Approach( v.HUDA, 1, FrameTime() );
 			

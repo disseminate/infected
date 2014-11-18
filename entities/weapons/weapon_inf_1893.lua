@@ -44,6 +44,9 @@ SWEP.W = 5;
 SWEP.H = 2;
 SWEP.PrimaryWep = true;
 SWEP.SecondaryWep = false;
+SWEP.CamPos = Vector( 200, 0, 0 );
+SWEP.FOV = 20;
+SWEP.LookAt = Vector( 0, 0, 0 );
 
 SWEP.ShotgunReload = true;
 
