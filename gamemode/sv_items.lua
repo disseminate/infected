@@ -165,25 +165,28 @@ function meta:MoveItem( key, x, y )
 	
 	if( !self.Inventory[key] ) then return end
 	
-	if( self.Inventory[key].Primary ) then
+	local item = self.Inventory[key];
+	local metaitem = GAMEMODE:GetMetaItem( item.Class );
+	
+	if( item.Primary ) then
 		
 		self:MoveItemEquipped( key, x, y, true );
 		return;
 		
-	elseif( self.Inventory[key].Secondary ) then
+	elseif( item.Secondary ) then
 		
 		self:MoveItemEquipped( key, x, y, false );
 		return;
 		
 	end
 	
-	if( self:IsInventorySlotOccupiedItemFilter( x, y, GAMEMODE:GetMetaItem( self.Inventory[key].Class ).W, GAMEMODE:GetMetaItem( self.Inventory[key].Class ).H, key ) ) then return end
+	if( self:IsInventorySlotOccupiedItemFilter( x, y, metaitem.W, metaitem.H, key ) ) then return end
 	
-	mysqloo.Query( "UPDATE items SET X = '" .. x .. "', Y = '" .. y .. "' WHERE SteamID = '" .. self:SteamID() .. "' AND CharID = '" .. self:CharID() .. "' AND X = '" .. self.Inventory[key].X .. "' AND Y = '" .. self.Inventory[key].Y .. "';" );
+	mysqloo.Query( "UPDATE items SET X = '" .. x .. "', Y = '" .. y .. "' WHERE SteamID = '" .. self:SteamID() .. "' AND CharID = '" .. self:CharID() .. "' AND X = '" .. item.X .. "' AND Y = '" .. item.Y .. "';" );
 	
 	for k, v in pairs( self:GetItemDataByCharID( self:CharID() ) ) do
 		
-		if( v.X == self.Inventory[key].X and v.Y == self.Inventory[key].Y ) then
+		if( v.X == item.X and v.Y == item.Y ) then
 			
 			v.X = x;
 			v.Y = y;
@@ -198,8 +201,8 @@ function meta:MoveItem( key, x, y )
 		net.WriteFloat( y );
 	net.Send( self );
 	
-	self.Inventory[key].X = x;
-	self.Inventory[key].Y = y;
+	item.X = x;
+	item.Y = y;
 	
 end
 
