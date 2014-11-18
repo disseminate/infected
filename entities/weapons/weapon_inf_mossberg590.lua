@@ -27,8 +27,8 @@ SWEP.AimAng = Angle( 2.56, 0.76, -3.45 );
 SWEP.Firearm = true;
 
 SWEP.Primary.ClipSize 		= 8;
-SWEP.Primary.DefaultClip 	= 8;
-SWEP.Primary.Ammo			= "buckshot";
+SWEP.Primary.DefaultClip 	= 0;
+SWEP.Primary.Ammo			= "";
 SWEP.Primary.InfiniteAmmo	= true;
 SWEP.Primary.Automatic		= false;
 SWEP.Primary.Sound			= "Weapon_590.Single";
@@ -38,6 +38,16 @@ SWEP.Primary.Accuracy		= 0.1;
 SWEP.Primary.NumBullets		= 8;
 SWEP.Primary.Delay			= 1;
 SWEP.Primary.ViewPunch		= Angle( -5, 0, 0 );
+
+SWEP.Description = "A Mossberg 590 shotgun.";
+SWEP.W = 5;
+SWEP.H = 2;
+SWEP.PrimaryWep = true;
+SWEP.SecondaryWep = false;
+SWEP.CamPos = Vector( -626, 25, -19 );
+SWEP.FOV = 6;
+SWEP.LookAt = Vector( -426, 17, -13 );
+SWEP.ItemAmmo = "ammo_buckshot";
 
 SWEP.ShotgunReload = true;
 

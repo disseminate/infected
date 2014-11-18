@@ -47,7 +47,7 @@ SWEP.SecondaryWep = false;
 SWEP.CamPos = Vector( 200, 0, 0 );
 SWEP.FOV = 20;
 SWEP.LookAt = Vector( 0, 0, 0 );
-SWEP.ItemAmmo = "buckshot";
+SWEP.ItemAmmo = "ammo_buckshot";
 
 SWEP.ShotgunReload = true;
 

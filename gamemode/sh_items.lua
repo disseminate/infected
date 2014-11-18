@@ -68,7 +68,19 @@ function GM:PostGamemodeLoaded()
 					
 					if( item.Vars.Clip ) then
 						
-						return metaitem.Desc .. "\n\nThere are " .. item.Vars.Clip .. " rounds loaded.";
+						local ammotype = "9mm";
+						
+						if( v.ItemAmmo == "ammo_buckshot" ) then
+							
+							ammotype = "buckshot";
+							
+						elseif( v.ItemAmmo == "ammo_556mm" ) then
+							
+							ammotype = "5.56mm";
+							
+						end
+						
+						return metaitem.Desc .. "\n\nThere are " .. item.Vars.Clip .. " " .. ammotype .. " rounds loaded.";
 						
 					else
 						
@@ -84,7 +96,19 @@ function GM:PostGamemodeLoaded()
 					
 					if( item.Vars.Clip ) then
 						
-						return "There are " .. item.Vars.Clip .. " rounds loaded.";
+						local ammotype = "9mm";
+						
+						if( v.ItemAmmo == "ammo_buckshot" ) then
+							
+							ammotype = "buckshot";
+							
+						elseif( v.ItemAmmo == "ammo_556mm" ) then
+							
+							ammotype = "5.56mm";
+							
+						end
+						
+						return "There are " .. item.Vars.Clip .. " " .. ammotype .. " rounds loaded.";
 						
 					else
 						

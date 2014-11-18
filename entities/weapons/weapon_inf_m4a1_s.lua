@@ -29,8 +29,8 @@ SWEP.AimAng = Angle( 1.5, 1.5, 1.5 );
 SWEP.Firearm = true;
 
 SWEP.Primary.ClipSize 		= 30;
-SWEP.Primary.DefaultClip 	= 30;
-SWEP.Primary.Ammo			= "pistol";
+SWEP.Primary.DefaultClip 	= 0;
+SWEP.Primary.Ammo			= "";
 SWEP.Primary.InfiniteAmmo	= true;
 SWEP.Primary.Automatic		= true;
 SWEP.Primary.Sound			= "Weapon_M4A1.Silenced";
@@ -39,6 +39,16 @@ SWEP.Primary.Force			= 3;
 SWEP.Primary.Accuracy		= 0.1;
 SWEP.Primary.Delay			= 0.075;
 SWEP.Primary.ViewPunch		= Angle( -1, 0, 0 );
+
+SWEP.Description = "An M4A1 rifle, with a silencer attached.";
+SWEP.W = 5;
+SWEP.H = 2;
+SWEP.PrimaryWep = true;
+SWEP.SecondaryWep = false;
+SWEP.CamPos = Vector( -588, 7, -4 );
+SWEP.FOV = 5;
+SWEP.LookAt = Vector( -388, 5, -2 );
+SWEP.ItemAmmo = "ammo_556mm";
 
 SWEP.ZombieRadius			= 200;
 

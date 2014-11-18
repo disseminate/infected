@@ -43,9 +43,9 @@ SWEP.W = 3;
 SWEP.H = 2;
 SWEP.PrimaryWep = false;
 SWEP.SecondaryWep = true;
-SWEP.CamPos = Vector( 200, 0, 0 );
+SWEP.CamPos = Vector( -158, -9, -7 );
 SWEP.FOV = 4;
-SWEP.LookAt = Vector( 0, 0, -2 );
-SWEP.ItemAmmo = "9mmrounds";
+SWEP.LookAt = Vector( 41, 2, 2 );
+SWEP.ItemAmmo = "ammo_9mm";
 
 SWEP.ZombieRadius			= 2000;

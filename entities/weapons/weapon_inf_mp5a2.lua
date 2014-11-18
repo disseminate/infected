@@ -29,8 +29,8 @@ SWEP.AimAng = Angle( 0.63, 0, 0 );
 SWEP.Firearm = true;
 
 SWEP.Primary.ClipSize 		= 30;
-SWEP.Primary.DefaultClip 	= 30;
-SWEP.Primary.Ammo			= "pistol";
+SWEP.Primary.DefaultClip 	= 0;
+SWEP.Primary.Ammo			= "";
 SWEP.Primary.InfiniteAmmo	= true;
 SWEP.Primary.Automatic		= true;
 SWEP.Primary.Sound			= "Weapon_MP5A2.Single";
@@ -39,5 +39,15 @@ SWEP.Primary.Force			= 3;
 SWEP.Primary.Accuracy		= 0.1;
 SWEP.Primary.Delay			= 0.075;
 SWEP.Primary.ViewPunch		= Angle( -1, 0, 0 );
+
+SWEP.Description = "An MP5A2 rifle.";
+SWEP.W = 5;
+SWEP.H = 2;
+SWEP.PrimaryWep = true;
+SWEP.SecondaryWep = false;
+SWEP.CamPos = Vector( -450, -19, -8 );
+SWEP.FOV = 5;
+SWEP.LookAt = Vector( -250, -10, -5 );
+SWEP.ItemAmmo = "ammo_9mm";
 
 SWEP.ZombieRadius			= 1500;

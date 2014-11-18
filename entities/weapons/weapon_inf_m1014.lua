@@ -27,8 +27,8 @@ SWEP.AimAng = Angle();
 SWEP.Firearm = true;
 
 SWEP.Primary.ClipSize 		= 8;
-SWEP.Primary.DefaultClip 	= 8;
-SWEP.Primary.Ammo			= "buckshot";
+SWEP.Primary.DefaultClip 	= 0;
+SWEP.Primary.Ammo			= "";
 SWEP.Primary.InfiniteAmmo	= true;
 SWEP.Primary.Automatic		= false;
 SWEP.Primary.Sound			= "Weapon_M1014.Single";
@@ -38,6 +38,16 @@ SWEP.Primary.Accuracy		= 0.1;
 SWEP.Primary.NumBullets		= 8;
 SWEP.Primary.Delay			= 0.2;
 SWEP.Primary.ViewPunch		= Angle( -5, 0, 0 );
+
+SWEP.Description = "An M1014 shotgun.";
+SWEP.W = 5;
+SWEP.H = 2;
+SWEP.PrimaryWep = true;
+SWEP.SecondaryWep = false;
+SWEP.CamPos = Vector( -546, 24, 75 );
+SWEP.FOV = 5;
+SWEP.LookAt = Vector( -348, 15, 48 );
+SWEP.ItemAmmo = "ammo_buckshot";
 
 SWEP.ShotgunReload = true;
 

@@ -32,6 +32,15 @@ SWEP.Primary.InfiniteAmmo	= true;
 SWEP.Primary.Automatic		= false;
 SWEP.Primary.Damage			= 5;
 
+SWEP.Description = "A wooden baseball bat. Useful for playing baseball.";
+SWEP.W = 4;
+SWEP.H = 2;
+SWEP.PrimaryWep = false;
+SWEP.SecondaryWep = true;
+SWEP.CamPos = Vector( -520, 28, 17 );
+SWEP.FOV = 5;
+SWEP.LookAt = Vector( -320, 17, 10 );
+
 SWEP.MissDelay				= 0.7;
 SWEP.HitDelay				= 0.5;
 SWEP.Length					= 75;
