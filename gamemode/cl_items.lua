@@ -119,8 +119,10 @@ function GM:RefreshInventory()
 				
 				if( bDoDrop ) then
 					
-					local i = receiver.ItemX - math.floor( GAMEMODE:GetMetaItem( droppable[1].Item.Class ).W / 2 );
-					local j = receiver.ItemY - math.floor( GAMEMODE:GetMetaItem( droppable[1].Item.Class ).H / 2 );
+					local metaitem = GAMEMODE:GetMetaItem( droppable[1].Item.Class );
+					
+					local i = receiver.ItemX - math.floor( metaitem.W / 2 );
+					local j = receiver.ItemY - math.floor( metaitem.H / 2 );
 					
 					if( i >= 1 and j >= 1 and self.D.Inventory.Slots[j][i] ) then
 						receiver = self.D.Inventory.Slots[j][i];
@@ -340,6 +342,15 @@ function GM:HandleItemClick( panel, item )
 	
 	local metadata = self:GetMetaItem( item.Class );
 	
+	if( panel.Click ) then
+		
+		panel:Click( item, metadata );
+		return;
+		
+	end
+	
+	if( !self.D.Inventory ) then return end
+	
 	if( self.D.Inventory.T ) then
 		
 		self.D.Inventory.T:SetText( metadata.Name );
@@ -349,8 +360,17 @@ function GM:HandleItemClick( panel, item )
 	
 	if( self.D.Inventory.D ) then
 		
-		self.D.Inventory.D:SetText( metadata.Desc );
-		self.D.Inventory.D:PerformLayout();
+		if( metadata.GetDesc ) then
+			
+			self.D.Inventory.D:SetText( metadata:GetDesc( item ) );
+			self.D.Inventory.D:PerformLayout();
+			
+		else
+			
+			self.D.Inventory.D:SetText( metadata.Desc );
+			self.D.Inventory.D:PerformLayout();
+			
+		end
 		
 	end
 	
@@ -430,6 +450,12 @@ function GM:RefreshItemButtons()
 		
 	end
 	
+	if( self.D.Inventory.Unload ) then
+		
+		self.D.Inventory.Unload:Remove();
+		
+	end
+	
 	local panel = self:GetSelectedItem();
 	
 	if( panel ) then
@@ -437,10 +463,52 @@ function GM:RefreshItemButtons()
 		local item = panel.Item;
 		local metaitem = self:GetMetaItem( item.Class );
 		
+		local y = 34 + ( 48 * 10 ) - 30;
+		
+		self.D.Inventory.Destroy = vgui.Create( "DButton", self.D.Inventory );
+		self.D.Inventory.Destroy:SetPos( 800 - 10 - 128, y );
+		self.D.Inventory.Destroy:SetSize( 128, 30 );
+		self.D.Inventory.Destroy:SetFont( "Infected.TinyTitle" );
+		self.D.Inventory.Destroy:SetText( "Destroy" );
+		function self.D.Inventory.Destroy:DoClick()
+			
+			net.Start( "nDestroyItem" );
+				net.WriteFloat( item.Key );
+			net.SendToServer();
+			
+			LocalPlayer().Inventory[item.Key] = nil;
+			
+			GAMEMODE:RefreshInventory();
+			GAMEMODE:DeselectInventory();
+			
+		end
+		
+		y = y - 40;
+		
+		self.D.Inventory.Drop = vgui.Create( "DButton", self.D.Inventory );
+		self.D.Inventory.Drop:SetPos( 800 - 10 - 128, y );
+		self.D.Inventory.Drop:SetSize( 128, 30 );
+		self.D.Inventory.Drop:SetFont( "Infected.TinyTitle" );
+		self.D.Inventory.Drop:SetText( "Drop" );
+		function self.D.Inventory.Drop:DoClick()
+			
+			net.Start( "nDropItem" );
+				net.WriteFloat( item.Key );
+			net.SendToServer();
+			
+			LocalPlayer().Inventory[item.Key] = nil;
+			
+			GAMEMODE:RefreshInventory();
+			GAMEMODE:DeselectInventory();
+			
+		end
+		
+		y = y - 40;
+		
 		if( metaitem.GetUseText and metaitem.OnUse ) then
 			
 			self.D.Inventory.Use = vgui.Create( "DButton", self.D.Inventory );
-			self.D.Inventory.Use:SetPos( 800 - 10 - 128, 34 + ( 48 * 10 ) - 30 - 40 - 40 );
+			self.D.Inventory.Use:SetPos( 800 - 10 - 128, y );
 			self.D.Inventory.Use:SetSize( 128, 30 );
 			self.D.Inventory.Use:SetFont( "Infected.TinyTitle" );
 			self.D.Inventory.Use:SetText( metaitem:GetUseText( item ) );
@@ -471,41 +539,31 @@ function GM:RefreshItemButtons()
 				
 			end
 			
-		end
-		
-		self.D.Inventory.Drop = vgui.Create( "DButton", self.D.Inventory );
-		self.D.Inventory.Drop:SetPos( 800 - 10 - 128, 34 + ( 48 * 10 ) - 30 - 40 );
-		self.D.Inventory.Drop:SetSize( 128, 30 );
-		self.D.Inventory.Drop:SetFont( "Infected.TinyTitle" );
-		self.D.Inventory.Drop:SetText( "Drop" );
-		function self.D.Inventory.Drop:DoClick()
-			
-			net.Start( "nDropItem" );
-				net.WriteFloat( item.Key );
-			net.SendToServer();
-			
-			LocalPlayer().Inventory[item.Key] = nil;
-			
-			GAMEMODE:RefreshInventory();
-			GAMEMODE:DeselectInventory();
+			y = y - 40;
 			
 		end
 		
-		self.D.Inventory.Destroy = vgui.Create( "DButton", self.D.Inventory );
-		self.D.Inventory.Destroy:SetPos( 800 - 10 - 128, 34 + ( 48 * 10 ) - 30 );
-		self.D.Inventory.Destroy:SetSize( 128, 30 );
-		self.D.Inventory.Destroy:SetFont( "Infected.TinyTitle" );
-		self.D.Inventory.Destroy:SetText( "Destroy" );
-		function self.D.Inventory.Destroy:DoClick()
+		if( ( metaitem.PrimaryWep or metaitem.SecondaryWep ) and item.Vars.Clip and item.Vars.Clip > 0 ) then
 			
-			net.Start( "nDestroyItem" );
-				net.WriteFloat( item.Key );
-			net.SendToServer();
+			self.D.Inventory.Unload = vgui.Create( "DButton", self.D.Inventory );
+			self.D.Inventory.Unload:SetPos( 800 - 10 - 128, y );
+			self.D.Inventory.Unload:SetSize( 128, 30 );
+			self.D.Inventory.Unload:SetFont( "Infected.TinyTitle" );
+			self.D.Inventory.Unload:SetText( "Unload" );
+			function self.D.Inventory.Unload:DoClick()
+				
+				net.Start( "nUnloadItem" );
+					net.WriteFloat( item.Key );
+				net.SendToServer();
+				
+				item.Vars.Clip = 0;
+				
+				GAMEMODE:RefreshInventory();
+				GAMEMODE:DeselectInventory();
+				
+			end
 			
-			LocalPlayer().Inventory[item.Key] = nil;
-			
-			GAMEMODE:RefreshInventory();
-			GAMEMODE:DeselectInventory();
+			y = y - 40;
 			
 		end
 		

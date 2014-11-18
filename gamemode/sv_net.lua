@@ -40,4 +40,7 @@ util.AddNetworkString( "nDropItem" );
 util.AddNetworkString( "nDestroyItem" );
 util.AddNetworkString( "nEquipPrimary" );
 util.AddNetworkString( "nEquipSecondary" );
+util.AddNetworkString( "nUnloadItem" );
 util.AddNetworkString( "nSelectWeapon" );
+
+util.AddNetworkString( "nReload" );

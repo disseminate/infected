@@ -1,3 +1,5 @@
+local meta = FindMetaTable( "Player" );
+
 local function nToggleHolster( len, ply )
 	
 	if( ply:GetActiveWeapon() != NULL ) then
@@ -24,3 +26,14 @@ local function nSelectWeapon( len, ply )
 	
 end
 net.Receive( "nSelectWeapon", nSelectWeapon );
+
+local function nReload( len, ply )
+	
+	local key = net.ReadFloat();
+	
+	if( !ply.Inventory[key] ) then return end
+	
+	ply:GetActiveWeapon():ReloadItem( ply.Inventory[key], GAMEMODE:GetMetaItem( ply.Inventory[key].Class ) );
+	
+end
+net.Receive( "nReload", nReload );

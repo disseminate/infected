@@ -3,26 +3,36 @@ function GM:Think()
 	self:DrawNavmesh();
 	
 	self:AIThink();
-	self:VehicleThink();
-	self:ViewOffsetThink();
-	
-end
-
-function GM:ViewOffsetThink()
 	
 	for _, v in pairs( player.GetAll() ) do
 		
-		if( v:GetViewOffset() != v:GetModelDef().ViewOffset ) then
+		self:VehicleThink( v );
+		self:ViewOffsetThink( v );
+		
+		if( !v.NextSaveClips ) then v.NextSaveClips = 0; end
+		
+		if( CurTime() >= v.NextSaveClips ) then
 			
-			v:SetViewOffset( v:GetModelDef().ViewOffset );
+			v:SaveWeaponClips();
+			v.NextSaveClips = CurTime() + 10;
 			
 		end
 		
-		if( v:GetViewOffsetDucked() != v:GetModelDef().ViewOffsetDucked ) then
-			
-			v:SetViewOffsetDucked( v:GetModelDef().ViewOffsetDucked );
-			
-		end
+	end
+	
+end
+
+function GM:ViewOffsetThink( v )
+	
+	if( v:GetViewOffset() != v:GetModelDef().ViewOffset ) then
+		
+		v:SetViewOffset( v:GetModelDef().ViewOffset );
+		
+	end
+	
+	if( v:GetViewOffsetDucked() != v:GetModelDef().ViewOffsetDucked ) then
+		
+		v:SetViewOffsetDucked( v:GetModelDef().ViewOffsetDucked );
 		
 	end
 	

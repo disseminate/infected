@@ -105,6 +105,15 @@ function PANEL:Paint( w, h )
 		
 	end
 	
+	if( self.ShowAmmo ) then
+		
+		surface.SetTextColor( Color( 255, 255, 255, 255 ) );
+		surface.SetFont( "Infected.TinyTitle" );
+		surface.SetTextPos( 4, 4 );
+		surface.DrawText( self.Item.Vars.Ammo );
+		
+	end
+	
 	self.LastPaint = RealTime()
 	
 end
@@ -277,7 +286,7 @@ function PANEL:Init()
 			
 			local campos = self.ModelPanel:GetCamPos();
 			local fov = self.ModelPanel:GetFOV();
-			local lookat = self.ModelPanel:GetLookAt();
+			local lookat = campos + self.ModelPanel:GetLookAng():Forward() * 200;
 			
 			MsgN( "ITEM.CamPos = Vector( " .. math.Round( campos.x ) .. ", " .. math.Round( campos.y ) .. ", " .. math.Round( campos.z ) .. " );" );
 			MsgN( "ITEM.FOV = " .. math.Round( fov ) .. ";" );

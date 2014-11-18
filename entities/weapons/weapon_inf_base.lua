@@ -22,7 +22,6 @@ SWEP.Secondary.DefaultClip 	= -1;
 SWEP.Secondary.Ammo			= "";
 SWEP.Secondary.Automatic	= false;
 
-SWEP.CanReload = false;
 SWEP.Holsterable = true;
 
 local ActIndex = {
@@ -332,11 +331,23 @@ function SWEP:Think()
 		
 		self:SetClip1( self:Clip1() + self.ApplyReloadAmount );
 		
-		if( !self.Primary.InfiniteAmmo ) then
+		self.ReloadItemTab.Vars.Ammo = self.ReloadItemTab.Vars.Ammo - self.ApplyReloadAmount;
+		
+		if( SERVER ) then
 			
-			self.Owner:RemoveAmmo( self.ApplyReloadAmount, self.Primary.Ammo );
+			if( self.ReloadItemTab.Vars.Ammo <= 0 ) then
+				
+				self.Owner:RemoveItem( self.ReloadItemTab.Key );
+				
+			else
+				
+				self.Owner:UpdateItemVars( self.ReloadItemTab.Key );
+				
+			end
 			
 		end
+		
+		self.Owner:SaveWeaponVars( self:GetClass() );
 		
 	end
 	
@@ -355,7 +366,7 @@ function SWEP:Think()
 			
 			if( self:GetNextPrimaryFire() <= CurTime() ) then
 				
-				if( self:Clip1() < self.Primary.ClipSize ) then
+				if( self:Clip1() < self.Primary.ClipSize and self.ApplyReloadAmount > 0 ) then
 					
 					self:ReloadProgress();
 					
@@ -483,9 +494,6 @@ function SWEP:CanPrimaryAttack( noreload )
 	
 		self:EmitSound( self.EmptySound or "Weapon_Pistol.Empty" );
 		self:SetNextPrimaryFire( CurTime() + 0.2 );
-		if( !noreload ) then
-			self:Reload();
-		end
 		return false;
 		
 	end
@@ -536,7 +544,8 @@ function SWEP:PrimaryUnholstered()
 			self:SetNextPrimaryFire( CurTime() + self.Primary.Delay );
 			self:ShootEffects();
 			
-			self:TakePrimaryAmmo( 1 );
+			self:SetClip1( self:Clip1() - 1 );
+			self.Owner:SaveWeaponVars( self:GetClass() );
 			
 			self:Idle();
 			
@@ -555,8 +564,6 @@ function SWEP:PrimaryUnholstered()
 				self.Owner:ViewPunch( Angle( self.Primary.ViewPunch.p, math.random( -self.Primary.ViewPunch.y, self.Primary.ViewPunch.y ), math.random( -self.Primary.ViewPunch.r, self.Primary.ViewPunch.r ) ) );
 				
 			end
-			
-			self.CanReload = true;
 			
 			if( type( self.Primary.Sound ) == "table" ) then
 				for _, v in pairs( self.Primary.Sound ) do
@@ -783,9 +790,30 @@ function SWEP:FillClip()
 	
 	if( !self.Owner or !self.Owner:IsValid() ) then return end
 	
-	if( self:Clip1() < self.Primary.ClipSize ) then
+	if( self.ApplyReloadAmount > 0 ) then
 		
-		self:SetClip1( self:Clip1() + 1 );
+		if( self:Clip1() < self.Primary.ClipSize ) then
+			
+			self:SetClip1( self:Clip1() + 1 );
+			self.ApplyReloadAmount = self.ApplyReloadAmount - 1;
+			
+			if( SERVER ) then
+				
+				if( self.ReloadItemTab.Vars.Ammo <= 0 ) then
+					
+					self.Owner:RemoveItem( self.ReloadItemTab.Key );
+					
+				else
+					
+					self.Owner:UpdateItemVars( self.ReloadItemTab.Key );
+					
+				end
+				
+			end
+			
+			self.Owner:SaveWeaponVars( self:GetClass() );
+			
+		end
 		
 	end
 	
@@ -796,6 +824,7 @@ function SWEP:ReloadProgress()
 	if( !self.Owner or !self.Owner:IsValid() ) then return end
 	
 	if( self:Clip1() >= self.Primary.ClipSize ) then return end
+	if( self.ApplyReloadAmount <= 0 ) then return end
 	
 	self:FillClip();
 	
@@ -848,26 +877,17 @@ function SWEP:Reload()
 	
 end
 
-function SWEP:ReloadItem()
+function SWEP:ReloadItem( item, metaitem )
 	
 	if( self.Owner:Holstered() ) then return end
 	if( !self.Firearm ) then return end
-	if( !self.CanReload ) then return end
 	
 	if( self.ShotgunReload ) then
 		
 		if( self.NeedPump ) then return false end
 		if( self.InReload ) then return false end
 		
-		local j = self.Primary.ClipSize - self:Clip1();
-		
-		if( j <= 0 ) then return false end
-		
-		if( !self.Primary.InfiniteAmmo ) then
-			
-			j = math.min( self.Primary.ClipSize - self:Clip1(), self:Ammo1() );
-			
-		end
+		self.ReloadItemTab = item;
 		
 		self.Weapon:SendWeaponAnim( ACT_SHOTGUN_RELOAD_START );
 		-- animation event
@@ -877,19 +897,36 @@ function SWEP:ReloadItem()
 		self:SetNextPrimaryFire( CurTime() + self:SequenceDuration() );
 		self.InReload = true;
 		
+		local delta = self.Primary.ClipSize - self:Clip1();
+		delta = math.min( self.Primary.ClipSize - self:Clip1(), item.Vars.Ammo );
+		self.ApplyReloadAmount = delta;
+		
+		item.Vars.Ammo = item.Vars.Ammo - delta;
+		
+		if( SERVER ) then
+			
+			if( item.Vars.Ammo <= 0 ) then
+				
+				self.Owner:RemoveItem( item.Key );
+				
+			else
+				
+				self.Owner:UpdateItemVars( item.Key );
+				
+			end
+			
+		end
+		
 		return true;
 		
 	else
 		
 		local delta = self.Primary.ClipSize - self:Clip1();
-		
-		if( !self.Primary.InfiniteAmmo ) then
-			
-			delta = math.min( self.Primary.ClipSize - self:Clip1(), self:Ammo1() );
-			
-		end
+		delta = math.min( self.Primary.ClipSize - self:Clip1(), item.Vars.Ammo );
 		
 		if( delta > 0 ) then
+			
+			self.ReloadItemTab = item;
 			
 			self:SendWeaponAnim( self.ReloadAct or ACT_VM_RELOAD );
 			
@@ -901,7 +938,6 @@ function SWEP:ReloadItem()
 			
 			self:SetNextPrimaryFire( CurTime() + self:SequenceDuration() );
 			self:SetNextSecondaryFire( CurTime() + self:SequenceDuration() );
-			self.CanReload = false;
 			
 			self:Idle();
 			

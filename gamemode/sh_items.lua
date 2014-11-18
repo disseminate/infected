@@ -44,7 +44,12 @@ function GM:PostGamemodeLoaded()
 			
 			ITEM = { };
 			ITEM.Vars = { };
-			ITEM.Vars.Clip = 0;
+			
+			if( v.Primary.ClipSize > -1 ) then
+				
+				ITEM.Vars.Clip = 0;
+				
+			end
 			
 			ITEM.Name = v.PrintName;
 			ITEM.Desc = v.Description or "";
@@ -54,6 +59,42 @@ function GM:PostGamemodeLoaded()
 			
 			ITEM.PrimaryWep = v.PrimaryWep;
 			ITEM.SecondaryWep = v.SecondaryWep;
+			
+			if( v.Description ) then
+				
+				ITEM.GetDesc = function( self, item )
+					
+					local metaitem = GAMEMODE:GetMetaItem( item.Class );
+					
+					if( item.Vars.Clip ) then
+						
+						return metaitem.Desc .. "\n\nThere are " .. item.Vars.Clip .. " rounds loaded.";
+						
+					else
+						
+						return metaitem.Desc;
+						
+					end
+					
+				end
+				
+			else
+				
+				ITEM.GetDesc = function( self, item )
+					
+					if( item.Vars.Clip ) then
+						
+						return "There are " .. item.Vars.Clip .. " rounds loaded.";
+						
+					else
+						
+						return "";
+						
+					end
+					
+				end
+				
+			end
 			
 			ITEM.CamPos = v.CamPos;
 			ITEM.FOV = v.FOV;
@@ -202,3 +243,65 @@ function meta:GetNextAvailableSlot( w, h )
 	
 end
 
+function meta:GetItemsOfType( t )
+	
+	self:CheckInventory();
+	
+	local keys = { };
+	
+	for k, v in pairs( self.Inventory ) do
+		
+		if( v.Class == t ) then
+			
+			table.insert( keys, k );
+			
+		end
+		
+	end
+	
+	return keys;
+	
+end
+
+function meta:SaveWeaponClips()
+	
+	self:CheckInventory();
+	
+	for k, v in pairs( self.Inventory ) do
+		
+		if( v.Vars.Clip ) then
+			
+			self:UpdateItemVars( k );
+			
+		end
+		
+	end
+	
+end
+
+function meta:SaveWeaponVars( class )
+	
+	self:CheckInventory();
+	
+	local key, item;
+	local wep = self:GetWeapon( class );
+	
+	for k, v in pairs( self.Inventory ) do
+		
+		if( v.Class == class ) then
+			
+			key = k;
+			item = v;
+			break;
+			
+		end
+		
+	end
+	
+	if( item and item.Vars.Clip ) then
+		
+		item.Vars.Clip = wep:Clip1();
+		
+	end
+	
+end

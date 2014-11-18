@@ -145,7 +145,7 @@ function meta:RemoveItem( key )
 		
 	end
 	
-	if( self:GetMetaItem( self.Inventory[key].Class ).PrimaryWep or self:GetMetaItem( self.Inventory[key].Class ).SecondaryWep ) then
+	if( GAMEMODE:GetMetaItem( self.Inventory[key].Class ).PrimaryWep or GAMEMODE:GetMetaItem( self.Inventory[key].Class ).SecondaryWep ) then
 		
 		self:StripWeapon( self.Inventory[key].Class );
 		
@@ -414,3 +414,34 @@ local function nEquipSecondary( len, ply )
 	
 end
 net.Receive( "nEquipSecondary", nEquipSecondary );
+
+local function nUnloadItem( len, ply )
+	
+	local key = net.ReadFloat();
+	
+	if( !ply.Inventory[key] ) then return end
+	
+	if( !ply.Inventory[key].Vars.Clip ) then return end
+	if( ply.Inventory[key].Vars.Clip <= 0 ) then return end
+	
+	local x, y = ply:GetNextAvailableSlot( GAMEMODE:GetMetaItem( ply.Inventory[key].Class ).W, GAMEMODE:GetMetaItem( ply.Inventory[key].Class ).H );
+	
+	if( x > 0 and y > 0 ) then
+		
+		ply:GiveItemVars( weapons.Get( ply.Inventory[key].Class ).ItemAmmo, { Ammo = ply.Inventory[key].Vars.Clip } );
+		
+		ply.Inventory[key].Vars.Clip = 0;
+		ply:UpdateItemVars( key );
+		
+		local wep = ply:GetWeapon( ply.Inventory[key].Class );
+		
+		if( wep and wep:IsValid() ) then
+			
+			wep:SetClip1( 0 );
+			
+		end
+		
+	end
+	
+end
+net.Receive( "nUnloadItem", nUnloadItem );

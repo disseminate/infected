@@ -32,6 +32,15 @@ SWEP.Primary.InfiniteAmmo	= true;
 SWEP.Primary.Automatic		= false;
 SWEP.Primary.Damage			= 5;
 
+SWEP.Description = "An axe, used to cut down trees.";
+SWEP.W = 4;
+SWEP.H = 2;
+SWEP.PrimaryWep = false;
+SWEP.SecondaryWep = true;
+ITEM.CamPos = Vector( -200, 0, 0 );
+ITEM.FOV = 10;
+ITEM.LookAt = Vector( 0, -2, 0 );
+
 SWEP.MissDelay				= 0.7;
 SWEP.HitDelay				= 0.5;
 SWEP.Length					= 64;

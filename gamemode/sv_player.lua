@@ -114,6 +114,24 @@ function GM:PlayerLoadout( ply )
 		
 	end
 	
+	ply:CheckInventory();
+	
+	for _, v in pairs( ply.Inventory ) do
+		
+		if( v.Primary or v.Secondary ) then
+			
+			ply:Give( v.Class );
+			
+			if( v.Vars.Clip ) then
+				
+				ply:GetWeapon( v.Class ):SetClip1( v.Vars.Clip );
+				
+			end
+			
+		end
+		
+	end
+	
 end
 
 function GM:PlayerDeathSound( ply )
@@ -193,6 +211,12 @@ function GM:ScalePlayerDamage( ply, hitgroup, dmg )
 		dmg:ScaleDamage( 0.25 );
 		
 	end
+	
+end
+
+function GM:PlayerDisconnected( ply )
+	
+	ply:SaveWeaponClips(); -- No disconnecting to save ammo allowed
 	
 end
 

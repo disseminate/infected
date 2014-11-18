@@ -1,3 +1,5 @@
+local meta = FindMetaTable( "Player" );
+
 function GM:ToggleHolsterThink()
 	
 	if( !self.ToggleHolsterPressed ) then self.ToggleHolsterPressed = false; end
@@ -51,7 +53,7 @@ function GM:GetWeaponSlot()
 	if( LocalPlayer():GetActiveWeapon().PrimaryWep ) then return 2 end
 	if( LocalPlayer():GetActiveWeapon().SecondaryWep ) then return 3 end
 	if( LocalPlayer():GetActiveWeapon():GetClass() == "weapon_physgun" ) then return 4 end
-	if( LocalPlayer():GetActiveWeapon():GetClass() == "weapon_toolgun" ) then return 5 end
+	if( LocalPlayer():GetActiveWeapon():GetClass() == "gmod_tool" ) then return 5 end
 	
 	return 1;
 	
@@ -61,7 +63,7 @@ function GM:GetWeaponBySlot( i )
 	
 	if( i == 1 ) then return "weapon_inf_hands" end
 	if( i == 4 ) then return "weapon_physgun" end
-	if( i == 5 ) then return "weapon_toolgun" end
+	if( i == 5 ) then return "gmod_tool" end
 	
 	for _, v in pairs( LocalPlayer():GetWeapons() ) do
 		
@@ -519,11 +521,51 @@ end
 
 function GM:KeyPress( ply, key )
 	
-	if( key == IN_RELOAD ) then
+	if( key == IN_RELOAD and !self.D.ReloadMenu ) then
 		
 		if( ply:GetActiveWeapon() and ply:GetActiveWeapon():IsValid() and ply:GetActiveWeapon().ItemAmmo ) then
 			
+			local ammo = ply:GetItemsOfType( ply:GetActiveWeapon().ItemAmmo );
 			
+			if( #ammo > 0 ) then
+				
+				self.D.ReloadMenu = vgui.Create( "IInventoryBack" );
+				self.D.ReloadMenu:SetSize( 48, 48 * #ammo );
+				self.D.ReloadMenu:SetPos( ScrW() - 58, ScrH() - 200 - ( 48 * #ammo ) );
+				self.D.ReloadMenu:MakePopup();
+				
+				local y = 48 * #ammo - 48;
+				
+				input.SetCursorPos( ScrW() - 58 + 24, ScrH() - 200 - 48 + 24 );
+				
+				for _, v in pairs( ammo ) do
+					
+					local item = ply.Inventory[v];
+					local metaitem = self:GetMetaItem( item.Class );
+					
+					local but = vgui.Create( "IItem", self.D.ReloadMenu );
+					but:SetPos( 0, y );
+					but:SetSize( metaitem.W * 48, metaitem.H * 48 );
+					but.Item = item;
+					but.ShowAmmo = true;
+					but:SetModel( metaitem.Model );
+					function but:Click( item, metaitem )
+						
+						ply:GetActiveWeapon():ReloadItem( item, metaitem );
+						
+						net.Start( "nReload" );
+							net.WriteFloat( item.Key );
+						net.SendToServer();
+						
+						self:GetParent():Remove();
+						
+					end
+					
+					y = y - 48;
+					
+				end
+				
+			end
 			
 		end
 		
@@ -537,7 +579,12 @@ function GM:KeyRelease( ply, key )
 		
 		if( ply:GetActiveWeapon() and ply:GetActiveWeapon():IsValid() and ply:GetActiveWeapon().ItemAmmo ) then
 			
-			
+			if( self.D.ReloadMenu ) then
+				
+				self.D.ReloadMenu:Remove();
+				self.D.ReloadMenu = nil;
+				
+			end
 			
 		end
 		

@@ -26,9 +26,9 @@ SWEP.AimAng = Angle( -0.03, 0.07, 1.5 );
 
 SWEP.Firearm = true;
 
-SWEP.Primary.ClipSize 		= 15;
-SWEP.Primary.DefaultClip 	= 15;
-SWEP.Primary.Ammo			= "buckshot";
+SWEP.Primary.ClipSize 		= 5;
+SWEP.Primary.DefaultClip 	= 0;
+SWEP.Primary.Ammo			= "";
 SWEP.Primary.InfiniteAmmo	= true;
 SWEP.Primary.Automatic		= false;
 SWEP.Primary.Sound			= "Weapon_1893.Single";
@@ -47,6 +47,7 @@ SWEP.SecondaryWep = false;
 SWEP.CamPos = Vector( 200, 0, 0 );
 SWEP.FOV = 20;
 SWEP.LookAt = Vector( 0, 0, 0 );
+SWEP.ItemAmmo = "buckshot";
 
 SWEP.ShotgunReload = true;
 
