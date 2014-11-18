@@ -319,7 +319,7 @@ function GM:HUDPaintIntro()
 			
 			if( d > 4 ) then
 				
-				if( cookie.GetNumber( "inf_introlines", 1 ) == 1 ) then
+				if( cookie.GetNumber( "inf_introlines", 0 ) == 0 ) then
 					
 					self.IntroMode = 2;
 					cookie.Set( "inf_introlines", 1 );
