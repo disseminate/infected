@@ -719,11 +719,11 @@ function GM:HUDPaintOthers()
 		if( !v.HUDA ) then v.HUDA = 0 end
 		
 		--local pos = v:GetPos();
-		local a, b = v:GetRotatedAABB( v:OBBMins(), v:OBBMaxs() )
+		local a, b = v:GetRotatedAABB( v:OBBMins(), v:OBBMaxs() );
 		local pos = v:GetPos() + ( a + b ) / 2;
 		local ts = pos:ToScreen();
 		
-		if( self.SeeAll or pos:Distance( LocalPlayer():EyePos() ) < 768 ) then
+		if( self.SeeAll or ( pos:Distance( LocalPlayer():EyePos() ) < 768 and self:CanSeePos( LocalPlayer():EyePos(), pos, { LocalPlayer(), v } ) ) ) then
 			
 			v.HUDA = math.Approach( v.HUDA, 1, FrameTime() );
 			
