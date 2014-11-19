@@ -868,12 +868,6 @@ function GM:HUDPaintDeath()
 		surface.SetFont( "Infected.MainTitle" );
 		local text = "Rest In Piece";
 		
-		if( !game.IsDedicated() or self.PrivateMode ) then
-			
-			text = "Rest In Pepperonis";
-			
-		end
-		
 		local tw, th = surface.GetTextSize( text );
 		
 		surface.SetTextPos( ScrW() / 2 - tw / 2, ScrH() / 2 - th / 2 );
