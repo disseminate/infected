@@ -114,7 +114,7 @@ function GM:PlayerLoadout( ply )
 		
 	end
 	
-	ply:CheckInventory();
+	if( ply:CheckInventory() ) then return end
 	
 	for _, v in pairs( ply.Inventory ) do
 		

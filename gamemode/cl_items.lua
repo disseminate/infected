@@ -9,7 +9,7 @@ net.Receive( "nClearInventory", nClearInventory );
 
 local function nGiveItem( len )
 	
-	LocalPlayer():CheckInventory();
+	if( LocalPlayer():CheckInventory() ) then return end
 	
 	local tab = net.ReadTable();
 	
@@ -22,7 +22,7 @@ net.Receive( "nGiveItem", nGiveItem );
 
 local function nRemoveItem( len )
 	
-	LocalPlayer():CheckInventory();
+	if( LocalPlayer():CheckInventory() ) then return end
 	
 	local key = net.ReadFloat();
 	
@@ -35,7 +35,7 @@ net.Receive( "nRemoveItem", nRemoveItem );
 
 local function nMoveItem( len )
 	
-	LocalPlayer():CheckInventory();
+	if( LocalPlayer():CheckInventory() ) then return end
 	
 	local key = net.ReadFloat();
 	local x = net.ReadFloat();
@@ -60,7 +60,7 @@ net.Receive( "nItemTooBig", nItemTooBig );
 
 function GM:ShowInventory()
 	
-	LocalPlayer():CheckInventory();
+	if( LocalPlayer():CheckInventory() ) then return end
 	
 	self.D.Inventory = vgui.Create( "DFrame" );
 	self.D.Inventory:SetSize( 800, 34 + ( 48 * 10 ) + 10 + 150 );

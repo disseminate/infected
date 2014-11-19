@@ -718,7 +718,6 @@ function GM:HUDPaintOthers()
 		
 		if( !v.HUDA ) then v.HUDA = 0 end
 		
-		--local pos = v:GetPos();
 		local a, b = v:GetRotatedAABB( v:OBBMins(), v:OBBMaxs() );
 		local pos = v:GetPos() + ( a + b ) / 2;
 		local ts = pos:ToScreen();

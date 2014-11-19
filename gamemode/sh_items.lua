@@ -154,17 +154,21 @@ end
 
 function meta:CheckInventory()
 	
+	if( self:CharID() == -1 ) then return true end
+	
 	if( !self.Inventory ) then
 		
 		self.Inventory = { };
 		
 	end
 	
+	return false;
+	
 end
 
 function meta:IsInventorySlotOccupiedItem( i, j, w, h )
 	
-	self:CheckInventory();
+	if( self:CheckInventory() ) then return end
 	
 	if( i + w - 1 <= 6 and j + h - 1 <= 10 ) then -- If the item could potentially fit here
 		
@@ -194,7 +198,7 @@ end
 
 function meta:IsInventorySlotOccupiedItemFilter( i, j, w, h, key )
 	
-	self:CheckInventory();
+	if( self:CheckInventory() ) then return end
 	
 	if( i + w - 1 <= 6 and j + h - 1 <= 10 ) then -- If the item could potentially fit here
 		
@@ -224,7 +228,7 @@ end
 
 function meta:IsInventorySlotOccupied( x, y, key )
 	
-	self:CheckInventory();
+	if( self:CheckInventory() ) then return end
 	
 	for _, v in pairs( self.Inventory ) do
 		
@@ -247,7 +251,7 @@ end
 
 function meta:GetNextAvailableSlot( w, h )
 	
-	self:CheckInventory();
+	if( self:CheckInventory() ) then return end
 	
 	for j = 1, 10 do -- For each inventory slot (i, j)
 		
@@ -269,7 +273,7 @@ end
 
 function meta:GetItemsOfType( t )
 	
-	self:CheckInventory();
+	if( self:CheckInventory() ) then return end
 	
 	local keys = { };
 	
@@ -289,7 +293,7 @@ end
 
 function meta:SaveWeaponClips()
 	
-	self:CheckInventory();
+	if( self:CheckInventory() ) then return end
 	
 	for k, v in pairs( self.Inventory ) do
 		
@@ -305,7 +309,7 @@ end
 
 function meta:SaveWeaponVars( class )
 	
-	self:CheckInventory();
+	if( self:CheckInventory() ) then return end
 	
 	local key, item;
 	local wep = self:GetWeapon( class );

@@ -266,6 +266,9 @@ Testers:
 
 function GM:ShowF1()
 	
+	if( LocalPlayer():CharID() == -1 ) then return end
+	if( self.CharCreateMode ) then return end
+	
 	self.D.F1 = vgui.Create( "DFrame" );
 	self.D.F1:SetSize( 500, 700 );
 	self.D.F1:Center();
@@ -300,11 +303,17 @@ end
 
 function GM:ShowF2()
 	
+	if( LocalPlayer():CharID() == -1 ) then return end
+	if( self.CharCreateMode ) then return end
+	
 	self:ShowInventory();
 	
 end
 
 function GM:ShowF3()
+	
+	if( LocalPlayer():CharID() == -1 ) then return end
+	if( self.CharCreateMode ) then return end
 	
 	self:ShowPlayerCard( LocalPlayer(), true );
 	

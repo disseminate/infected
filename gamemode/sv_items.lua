@@ -25,7 +25,7 @@ end
 
 function meta:GiveItemVars( class, vars )
 	
-	self:CheckInventory();
+	if( self:CheckInventory() ) then return end
 	
 	local item = GAMEMODE:Item( class );
 	
@@ -77,7 +77,7 @@ end
 
 function meta:GiveItem( item )
 	
-	self:CheckInventory();
+	if( self:CheckInventory() ) then return end
 	
 	if( type( item ) == "string" ) then
 		
@@ -129,7 +129,7 @@ end
 
 function meta:RemoveItem( key )
 	
-	self:CheckInventory();
+	if( self:CheckInventory() ) then return end
 	
 	if( !self.Inventory[key] ) then return end
 	
@@ -161,7 +161,7 @@ end
 
 function meta:MoveItem( key, x, y )
 	
-	self:CheckInventory();
+	if( self:CheckInventory() ) then return end
 	
 	if( !self.Inventory[key] ) then return end
 	
@@ -250,7 +250,7 @@ end
 
 function meta:UseItem( key )
 	
-	self:CheckInventory();
+	if( self:CheckInventory() ) then return end
 	
 	if( !self.Inventory[key] ) then return end
 	
