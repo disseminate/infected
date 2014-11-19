@@ -60,6 +60,8 @@ function GM:PostGamemodeLoaded()
 			ITEM.PrimaryWep = v.PrimaryWep;
 			ITEM.SecondaryWep = v.SecondaryWep;
 			
+			ITEM.ItemAmmo = v.ItemAmmo;
+			
 			if( v.Description ) then
 				
 				ITEM.GetDesc = function( self, item )

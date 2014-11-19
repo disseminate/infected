@@ -254,6 +254,16 @@ end
 
 function meta:LoadItemData( data )
 	
+	for _, v in pairs( self.Inventory ) do
+		
+		if( v.Primary or v.Secondary ) then
+			
+			self:StripWeapon( v.Class );
+			
+		end
+		
+	end
+	
 	self.Inventory = { };
 	net.Start( "nClearInventory" );
 	net.Send( self );
