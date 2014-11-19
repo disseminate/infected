@@ -257,13 +257,15 @@ function meta:UseItem( key )
 	local item = self.Inventory[key];
 	local metaitem = GAMEMODE:GetMetaItem( item.Class );
 	
+	if( !metaitem.OnUse ) then return end
+	
 	metaitem:OnUse( item );
 	
 	if( item.Vars.Uses ) then
 		
 		item.Vars.Uses = item.Vars.Uses - 1;
 		
-		if( item.Vars.Uses == 0 ) then
+		if( item.Vars.Uses == 0 and metaitem.RemoveOnUse ) then
 			
 			self:RemoveItem( key );
 			
@@ -347,13 +349,17 @@ local function nEquipPrimary( len, ply )
 	local key = net.ReadFloat();
 	
 	if( !ply.Inventory[key] ) then return end
-	if( !GAMEMODE:GetMetaItem( ply.Inventory[key].Class ).PrimaryWep ) then return end
 	
-	mysqloo.Query( "UPDATE items SET X = '0', Y = '0', PrimaryEquipped = '1', SecondaryEquipped = '0' WHERE SteamID = '" .. ply:SteamID() .. "' AND CharID = '" .. ply:CharID() .. "' AND X = '" .. ply.Inventory[key].X .. "' AND Y = '" .. ply.Inventory[key].Y .. "';" );
+	local item = ply.Inventory[key];
+	local metaitem = GAMEMODE:GetMetaItem( item.Class );
+	
+	if( !metaitem.PrimaryWep ) then return end
+	
+	mysqloo.Query( "UPDATE items SET X = '0', Y = '0', PrimaryEquipped = '1', SecondaryEquipped = '0' WHERE SteamID = '" .. ply:SteamID() .. "' AND CharID = '" .. ply:CharID() .. "' AND X = '" .. item.X .. "' AND Y = '" .. item.Y .. "';" );
 	
 	for k, v in pairs( ply:GetItemDataByCharID( ply:CharID() ) ) do
 		
-		if( v.X == ply.Inventory[key].X and v.Y == ply.Inventory[key].Y ) then
+		if( v.X == item.X and v.Y == item.Y ) then
 			
 			v.X = 0;
 			v.Y = 0;
@@ -364,16 +370,16 @@ local function nEquipPrimary( len, ply )
 		
 	end
 	
-	ply.Inventory[key].X = 0;
-	ply.Inventory[key].Y = 0;
-	ply.Inventory[key].Primary = true;
-	ply.Inventory[key].Secondary = false;
+	item.X = 0;
+	item.Y = 0;
+	item.Primary = true;
+	item.Secondary = false;
 	
-	ply:Give( ply.Inventory[key].Class );
+	ply:Give( item.Class );
 	
-	if( ply.Inventory[key].Vars.Clip ) then
+	if( item.Vars.Clip ) then
 		
-		ply:GetWeapon( ply.Inventory[key].Class ):SetClip1( ply.Inventory[key].Vars.Clip );
+		ply:GetWeapon( item.Class ):SetClip1( item.Vars.Clip );
 		
 	end
 	
@@ -385,13 +391,17 @@ local function nEquipSecondary( len, ply )
 	local key = net.ReadFloat();
 	
 	if( !ply.Inventory[key] ) then return end
-	if( !GAMEMODE:GetMetaItem( ply.Inventory[key].Class ).SecondaryWep ) then return end
 	
-	mysqloo.Query( "UPDATE items SET X = '0', Y = '0', PrimaryEquipped = '0', SecondaryEquipped = '1' WHERE SteamID = '" .. ply:SteamID() .. "' AND CharID = '" .. ply:CharID() .. "' AND X = '" .. ply.Inventory[key].X .. "' AND Y = '" .. ply.Inventory[key].Y .. "';" );
+	local item = ply.Inventory[key];
+	local metaitem = GAMEMODE:GetMetaItem( item.Class );
+	
+	if( !metaitem.SecondaryWep ) then return end
+	
+	mysqloo.Query( "UPDATE items SET X = '0', Y = '0', PrimaryEquipped = '0', SecondaryEquipped = '1' WHERE SteamID = '" .. ply:SteamID() .. "' AND CharID = '" .. ply:CharID() .. "' AND X = '" .. item.X .. "' AND Y = '" .. item.Y .. "';" );
 	
 	for k, v in pairs( ply:GetItemDataByCharID( ply:CharID() ) ) do
 		
-		if( v.X == ply.Inventory[key].X and v.Y == ply.Inventory[key].Y ) then
+		if( v.X == item.X and v.Y == item.Y ) then
 			
 			v.X = 0;
 			v.Y = 0;
@@ -402,16 +412,16 @@ local function nEquipSecondary( len, ply )
 		
 	end
 	
-	ply.Inventory[key].X = 0;
-	ply.Inventory[key].Y = 0;
-	ply.Inventory[key].Primary = false;
-	ply.Inventory[key].Secondary = true;
+	item.X = 0;
+	item.Y = 0;
+	item.Primary = false;
+	item.Secondary = true;
 	
-	ply:Give( ply.Inventory[key].Class );
+	ply:Give( item.Class );
 	
-	if( ply.Inventory[key].Vars.Clip ) then
+	if( item.Vars.Clip ) then
 		
-		ply:GetWeapon( ply.Inventory[key].Class ):SetClip1( ply.Inventory[key].Vars.Clip );
+		ply:GetWeapon( item.Class ):SetClip1( item.Vars.Clip );
 		
 	end
 	
@@ -424,19 +434,22 @@ local function nUnloadItem( len, ply )
 	
 	if( !ply.Inventory[key] ) then return end
 	
-	if( !ply.Inventory[key].Vars.Clip ) then return end
-	if( ply.Inventory[key].Vars.Clip <= 0 ) then return end
+	local item = ply.Inventory[key];
+	local metaitem = GAMEMODE:GetMetaItem( item.Class );
 	
-	local x, y = ply:GetNextAvailableSlot( GAMEMODE:GetMetaItem( ply.Inventory[key].Class ).W, GAMEMODE:GetMetaItem( ply.Inventory[key].Class ).H );
+	if( !item.Vars.Clip ) then return end
+	if( item.Vars.Clip <= 0 ) then return end
+	
+	local x, y = ply:GetNextAvailableSlot( metaitem.W, metaitem.H );
 	
 	if( x > 0 and y > 0 ) then
 		
-		ply:GiveItemVars( weapons.Get( ply.Inventory[key].Class ).ItemAmmo, { Ammo = ply.Inventory[key].Vars.Clip } );
+		ply:GiveItemVars( weapons.Get( item.Class ).ItemAmmo, { Ammo = item.Vars.Clip } );
 		
-		ply.Inventory[key].Vars.Clip = 0;
+		item.Vars.Clip = 0;
 		ply:UpdateItemVars( key );
 		
-		local wep = ply:GetWeapon( ply.Inventory[key].Class );
+		local wep = ply:GetWeapon( item.Class );
 		
 		if( wep and wep:IsValid() ) then
 			
