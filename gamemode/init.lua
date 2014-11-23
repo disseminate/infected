@@ -50,6 +50,7 @@ AddCSLuaFile( "cl_dev.lua" );
 AddCSLuaFile( "cl_hud.lua" );
 AddCSLuaFile( "cl_items.lua" );
 AddCSLuaFile( "cl_map.lua" );
+AddCSLuaFile( "cl_scoreboard.lua" );
 AddCSLuaFile( "cl_sound.lua" );
 AddCSLuaFile( "cl_think.lua" );
 

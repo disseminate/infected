@@ -52,6 +52,12 @@ surface.CreateFont( "Infected.LabelSmall", {
 	weight = 500,
 	antialias = true } );
 	
+surface.CreateFont( "Infected.LabelSmaller", {
+	font = "Myriad Pro",
+	size = 16,
+	weight = 500,
+	antialias = true } );
+	
 surface.CreateFont( "Infected.PlayerName", {
 	font = "BebasNeue",
 	size = 30,

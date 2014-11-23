@@ -134,6 +134,8 @@ SQLStructure["players"] = {
 	{ "PhysTrust", "INT", "1" },
 	{ "ToolTrust", "INT", "0" },
 	{ "CharCreateFlags", "TEXT" },
+	{ "PlayerTitle", "TEXT" },
+	{ "PlayerTitleColor", "TEXT" },
 };
 
 SQLStructure["bans"] = {

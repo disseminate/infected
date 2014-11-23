@@ -344,8 +344,8 @@ function GM:ShowPlayerCard( ply, me )
 		
 	end
 	
-	self.D.F3.P:SetCamPos( Vector( 50, 20, 67 ) );
-	self.D.F3.P:SetLookAt( Vector( 0, 0, 67 ) );
+	self.D.F3.P:SetCamPos( Vector( 50, 20, 63 ) );
+	self.D.F3.P:SetLookAtEyes();
 	self.D.F3.P:SetFOV( 15 );
 	
 	self.D.F3.P.NoMouseWheel = true;

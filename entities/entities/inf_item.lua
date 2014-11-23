@@ -91,8 +91,6 @@ end
 
 function ENT:Use( ply, caller, type, val )
 	
-	if( CLIENT ) then return end
-	
 	if( ply:PlayerClass() == PLAYERCLASS_INFECTED or ply:PlayerClass() == PLAYERCLASS_SPECIALINFECTED ) then return end
 	
 	local metaitem = GAMEMODE:GetMetaItem( self:GetItemClass() );

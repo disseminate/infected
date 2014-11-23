@@ -21,8 +21,16 @@ net.Receive( "nToggleHolster", nToggleHolster );
 
 local function nSelectWeapon( len, ply )
 	
-	local class = net.ReadString();
-	ply:SelectWeapon( class );
+	if( !ply.NextWeaponSwap ) then ply.NextWeaponSwap = CurTime() end
+	
+	if( CurTime() >= ply.NextWeaponSwap ) then
+		
+		local class = net.ReadString();
+		ply:SelectWeapon( class );
+		
+		ply.NextWeaponSwap = CurTime() + 0.1;
+		
+	end
 	
 end
 net.Receive( "nSelectWeapon", nSelectWeapon );

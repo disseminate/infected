@@ -225,6 +225,8 @@ function meta:LoadPlayer( data )
 	self:SetPhysTrust( tobool( data.PhysTrust ) );
 	self:SetToolTrust( tobool( data.ToolTrust ) );
 	self:SetCharCreateFlags( data.CharCreateFlags );
+	self:SetPlayerTitle( data.PlayerTitle );
+	self:SetPlayerTitleColor( data.PlayerTitleColor );
 	
 end
 
