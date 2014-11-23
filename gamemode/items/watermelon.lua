@@ -7,8 +7,6 @@ ITEM.H = 3;
 
 ITEM.Vars.Uses = 4;
 
-ITEM.RemoveOnUse = true;
-
 function ITEM:GetUseText( item )
 	
 	return "Eat (" .. item.Vars.Uses .. "/4)";

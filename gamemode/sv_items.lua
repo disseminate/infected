@@ -263,15 +263,19 @@ function meta:UseItem( key )
 	
 	if( item.Vars.Uses ) then
 		
-		item.Vars.Uses = item.Vars.Uses - 1;
-		
-		if( item.Vars.Uses == 0 and metaitem.RemoveOnUse ) then
+		if( item.Vars.Uses > 0 ) then
 			
-			self:RemoveItem( key );
+			item.Vars.Uses = item.Vars.Uses - 1;
 			
-		else
-			
-			self:UpdateItemVars( key );
+			if( item.Vars.Uses == 0 and metaitem.RemoveOnUse ) then
+				
+				self:RemoveItem( key );
+				
+			else
+				
+				self:UpdateItemVars( key );
+				
+			end
 			
 		end
 		
