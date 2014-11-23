@@ -3,6 +3,7 @@ function GM:Think()
 	self:DrawNavmesh();
 	
 	self:AIThink();
+	self:ItemThink();
 	
 	for _, v in pairs( player.GetAll() ) do
 		

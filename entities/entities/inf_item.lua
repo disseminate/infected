@@ -26,6 +26,8 @@ function ENT:SetupDataTables()
 	
 	self:NetworkVar( "String", 0, "ItemClass" );
 	self:NetworkVar( "String", 1, "VarString" );
+	self:NetworkVar( "Bool", 0, "Autospawn" );
+	self:NetworkVar( "Float", 0, "AutospawnTime" );
 	
 	if( CLIENT ) then return end
 	
@@ -90,6 +92,8 @@ end
 function ENT:Use( ply, caller, type, val )
 	
 	if( CLIENT ) then return end
+	
+	if( ply:PlayerClass() == PLAYERCLASS_INFECTED or ply:PlayerClass() == PLAYERCLASS_SPECIALINFECTED ) then return end
 	
 	local metaitem = GAMEMODE:GetMetaItem( self:GetItemClass() );
 	

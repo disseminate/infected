@@ -254,6 +254,8 @@ end
 
 function meta:LoadItemData( data )
 	
+	self:CheckInventory();
+	
 	for _, v in pairs( self.Inventory ) do
 		
 		if( v.Primary or v.Secondary ) then

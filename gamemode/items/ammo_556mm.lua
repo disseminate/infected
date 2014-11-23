@@ -5,6 +5,8 @@ ITEM.Model = "models/Items/BoxSRounds.mdl";
 ITEM.W = 1;
 ITEM.H = 1;
 
+ITEM.Tier = 5;
+
 ITEM.Vars.Ammo = 60;
 
 function ITEM:GetDesc( item )

@@ -306,6 +306,8 @@ function GM:ShowF2()
 	if( LocalPlayer():CharID() == -1 ) then return end
 	if( self.CharCreateMode ) then return end
 	
+	if( LocalPlayer():PlayerClass() == PLAYERCLASS_INFECTED or LocalPlayer():PlayerClass() == PLAYERCLASS_SPECIALINFECTED ) then return end
+	
 	self:ShowInventory();
 	
 end

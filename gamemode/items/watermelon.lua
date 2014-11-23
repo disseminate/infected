@@ -5,7 +5,11 @@ ITEM.Model = "models/props_junk/watermelon01.mdl";
 ITEM.W = 3;
 ITEM.H = 3;
 
+ITEM.Tier = 2;
+
 ITEM.Vars.Uses = 4;
+
+ITEM.UseHealth = 10;
 
 function ITEM:GetUseText( item )
 	
@@ -14,12 +18,4 @@ function ITEM:GetUseText( item )
 end
 
 function ITEM:OnUse( item )
-	
-	if( SERVER ) then
-		
-		item.Owner:SetHealth( item.Owner:Health() + 10 );
-		-- Play a sound
-		
-	end
-	
 end

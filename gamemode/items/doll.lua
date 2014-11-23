@@ -4,3 +4,5 @@ ITEM.Model = "models/props_c17/doll01.mdl";
 
 ITEM.W = 1;
 ITEM.H = 1;
+
+ITEM.Tier = 1;
