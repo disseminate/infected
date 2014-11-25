@@ -4,18 +4,14 @@ function GM:SetupMove( ply, mv, cmd )
 	
 	if( !ply or !ply:IsValid() ) then return end
 	
-	if( ply:PlayerClass() == PLAYERCLASS_SPECIALINFECTED ) then
+	if( ply:GetSpecialInfectedType() == SI_JUMPER ) then
 		
-		if( ply:GetModel() == "models/player/odessa.mdl" ) then
+		if( mv:KeyPressed( IN_JUMP ) and ply:OnGround() and !mv:KeyDown( IN_USE ) ) then
 			
-			if( mv:KeyPressed( IN_JUMP ) and ply:OnGround() and !mv:KeyDown( IN_USE ) ) then
-				
-				local dot = ply:GetAimVector():Dot( Vector( ply:GetAimVector().x, ply:GetAimVector().y, 0 ):GetNormal() );
-				local mul = dot / 3 + 0.66;
-				
-				mv:SetVelocity( ply:GetAimVector() * 1300 * mul );
-				
-			end
+			local dot = ply:GetAimVector():Dot( Vector( ply:GetAimVector().x, ply:GetAimVector().y, 0 ):GetNormal() );
+			local mul = dot / 3 + 0.66;
+			
+			mv:SetVelocity( ply:GetAimVector() * 1300 * mul );
 			
 		end
 		
@@ -52,5 +48,29 @@ end
 function meta:IsZombie()
 	
 	return ( self:PlayerClass() == PLAYERCLASS_INFECTED or self:PlayerClass() == PLAYERCLASS_SPECIALINFECTED );
+	
+end
+
+function meta:GetSpecialAnimSet()
+	
+	if( self:PlayerClass() == PLAYERCLASS_SPECIALINFECTED and self:GetModel() == "models/player/odessa.mdl" ) then
+		
+		return "FastZombie";
+		
+	end
+	
+end
+
+function meta:GetSpecialInfectedType()
+	
+	if( self:PlayerClass() == PLAYERCLASS_SPECIALINFECTED ) then
+		
+		if( self:GetModel() == "models/player/odessa.mdl" ) then
+			
+			return SI_JUMPER;
+			
+		end
+		
+	end
 	
 end

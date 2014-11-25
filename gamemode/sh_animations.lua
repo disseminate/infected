@@ -27,7 +27,7 @@ function GM:CalcSpecialActivity( ply, vel )
 		
 	end
 	
-	if( ply:PlayerClass() == PLAYERCLASS_SPECIALINFECTED and ply:GetModel() == "models/player/odessa.mdl" ) then
+	if( ply:GetSpecialAnimSet() == "FastZombie" ) then
 		
 		if( self.ZombieAnimTab[ply.CalcIdeal] ) then
 			

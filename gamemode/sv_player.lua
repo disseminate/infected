@@ -171,13 +171,9 @@ end
 
 function GM:GetFallDamage( ply, speed )
 	
-	if( ply:PlayerClass() == PLAYERCLASS_SPECIALINFECTED ) then
+	if( ply:GetSpecialInfectedType() == SI_JUMPER ) then
 		
-		if( ply:GetModel() == "models/player/odessa.mdl" ) then
-			
-			return 0;
-			
-		end
+		return 0;
 		
 	end
 	
