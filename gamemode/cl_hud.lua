@@ -288,15 +288,19 @@ function GM:HUDPaintIntro()
 		surface.SetTextColor( Color( 255, 255, 255, 255 ) );
 		surface.DrawText( text );
 		
-		-- lw - tw
-		local x1 = ScrW() / 2 - lw / 2;
-		local x2 = ScrW() / 2 + lw / 2;
-		local linewidth = ( lw - tw ) / 2 - 20;
-		
-		for i = 1, 0, -1 do
+		if( tw < lw ) then
 			
-			surface.DrawLine( x1, ScrH() * 0.5 - i, x1 + linewidth, ScrH() * 0.5 - i );
-			surface.DrawLine( x2, ScrH() * 0.5 - i, x2 - linewidth, ScrH() * 0.5 - i );
+			-- lw - tw
+			local x1 = ScrW() / 2 - lw / 2;
+			local x2 = ScrW() / 2 + lw / 2;
+			local linewidth = ( lw - tw ) / 2 - 20;
+			
+			for i = 1, 0, -1 do
+				
+				surface.DrawLine( x1, ScrH() * 0.5 - i, x1 + linewidth, ScrH() * 0.5 - i );
+				surface.DrawLine( x2, ScrH() * 0.5 - i, x2 - linewidth, ScrH() * 0.5 - i );
+				
+			end
 			
 		end
 		
