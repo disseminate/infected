@@ -1,3 +1,5 @@
+local meta = FindMetaTable( "Player" );
+
 function GM:SetupMove( ply, mv, cmd )
 	
 	if( !ply or !ply:IsValid() ) then return end
@@ -44,5 +46,11 @@ function GM:PlayerFootstep( ply, pos, foot, s, vol, rf )
 	end
 	
 	self.BaseClass:PlayerFootstep( ply, pos, foot, s, vol, rf );
+	
+end
+
+function meta:IsZombie()
+	
+	return ( self:PlayerClass() == PLAYERCLASS_INFECTED or self:PlayerClass() == PLAYERCLASS_SPECIALINFECTED );
 	
 end

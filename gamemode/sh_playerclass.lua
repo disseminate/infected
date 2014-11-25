@@ -7,7 +7,7 @@ PLAYER.CanUseFlashlight		= true;
 
 function PLAYER:GetHandsModel()
 	
-	if( self.Player:PlayerClass() == PLAYERCLASS_INFECTED or self.Player:PlayerClass() == PLAYERCLASS_SPECIALINFECTED ) then
+	if( self.Player:IsZombie() ) then
 		
 		return { model = "models/weapons/c_arms_citizen.mdl", skin = 2, body = "0000000" };
 		

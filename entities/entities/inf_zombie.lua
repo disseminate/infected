@@ -124,7 +124,7 @@ function ENT:AttackThink()
 			
 			for _, v in pairs( player.GetAll() ) do
 				
-				if( v:PlayerClass() == PLAYERCLASS_INFECTED or v:PlayerClass() == PLAYERCLASS_SPECIALINFECTED ) then
+				if( v:IsZombie() ) then
 					
 					table.insert( trace.filter, v );
 					
@@ -361,7 +361,7 @@ function ENT:FindClosestPlayer()
 	
 	for _, v in pairs( player.GetAll() ) do
 		
-		if( v:PlayerClass() != PLAYERCLASS_INFECTED and v:PlayerClass() != PLAYERCLASS_SPECIALINFECTED ) then
+		if( !v:IsZombie() ) then
 			
 			local d = v:GetPos():Distance( self:GetPos() );
 			
@@ -386,7 +386,7 @@ function ENT:FindClosestPlayerDistance()
 	
 	for _, v in pairs( player.GetAll() ) do
 		
-		if( v:PlayerClass() != PLAYERCLASS_INFECTED and v:PlayerClass() != PLAYERCLASS_SPECIALINFECTED ) then
+		if( !v:IsZombie() ) then
 			
 			local d = v:GetPos():Distance( self:GetPos() );
 			
@@ -411,7 +411,7 @@ function ENT:FindClosestPlayerMemory()
 	
 	for k, v in pairs( self.PlayerPositions ) do
 		
-		if( v:PlayerClass() != PLAYERCLASS_INFECTED and v:PlayerClass() != PLAYERCLASS_SPECIALINFECTED ) then
+		if( !v:IsZombie() ) then
 			
 			local d = v:Distance( self:GetPos() );
 			
@@ -545,7 +545,7 @@ function ENT:UpdatePlayerPositions()
 	for _, v in pairs( player.GetAll() ) do
 		
 		if( !v:IsTargetable() ) then continue; end
-		if( v:PlayerClass() == PLAYERCLASS_INFECTED or v:PlayerClass() == PLAYERCLASS_SPECIALINFECTED ) then continue; end
+		if( v:IsZombie() ) then continue; end
 		
 		local pos = v:GetPos();
 		local d = self:GetPos():Distance( pos );

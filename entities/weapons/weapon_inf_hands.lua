@@ -132,7 +132,7 @@ function SWEP:PrimaryUnholstered()
 				
 				for _, v in pairs( player.GetAll() ) do
 					
-					if( v:PlayerClass() == PLAYERCLASS_INFECTED or v:PlayerClass() == PLAYERCLASS_SPECIALINFECTED ) then
+					if( v:IsZombie() ) then
 						
 						table.insert( trace.filter, v );
 						
@@ -279,7 +279,7 @@ function SWEP:FistDamage()
 	
 	if( tr.Hit ) then
 		
-		if( self.Owner:PlayerClass() == PLAYERCLASS_INFECTED or self.Owner:PlayerClass() == PLAYERCLASS_SPECIALINFECTED ) then
+		if( self.Owner:IsZombie() ) then
 			
 			self:PlaySound( "infected/zombie/attack/hit_0" .. math.random( 1, 8 ) .. ".wav" );
 			

@@ -306,7 +306,7 @@ function GM:ShowF2()
 	if( LocalPlayer():CharID() == -1 ) then return end
 	if( self.CharCreateMode ) then return end
 	
-	if( LocalPlayer():PlayerClass() == PLAYERCLASS_INFECTED or LocalPlayer():PlayerClass() == PLAYERCLASS_SPECIALINFECTED ) then return end
+	if( LocalPlayer():IsZombie() ) then return end
 	
 	self:ShowInventory();
 	
@@ -422,42 +422,46 @@ function GM:ShowPlayerCard( ply, me )
 			
 		end
 		
-		self.D.F3.E_S = vgui.Create( "DButton", self.D.F3 );
-		self.D.F3.E_S:SetPos( 10, 24 + 10 + 128 + 10 + 30 + 10 + 30 + 10 + 30 + 10 );
-		self.D.F3.E_S:SetSize( 128, 30 );
-		self.D.F3.E_S:SetFont( "Infected.TinyTitle" );
-		self.D.F3.E_S:SetText( "Expression: Scared" );
-		function self.D.F3.E_S:DoClick()
+		if( !LocalPlayer():IsZombie() ) then
 			
-			net.Start( "nSetExpression" );
-				net.WriteFloat( 1 );
-			net.SendToServer();
+			self.D.F3.E_S = vgui.Create( "DButton", self.D.F3 );
+			self.D.F3.E_S:SetPos( 10, 24 + 10 + 128 + 10 + 30 + 10 + 30 + 10 + 30 + 10 );
+			self.D.F3.E_S:SetSize( 128, 30 );
+			self.D.F3.E_S:SetFont( "Infected.TinyTitle" );
+			self.D.F3.E_S:SetText( "Expression: Scared" );
+			function self.D.F3.E_S:DoClick()
+				
+				net.Start( "nSetExpression" );
+					net.WriteFloat( 1 );
+				net.SendToServer();
+				
+			end
 			
-		end
-		
-		self.D.F3.E_A = vgui.Create( "DButton", self.D.F3 );
-		self.D.F3.E_A:SetPos( 10, 24 + 10 + 128 + 10 + 30 + 10 + 30 + 10 + 30 + 10 + 30 + 10 );
-		self.D.F3.E_A:SetSize( 128, 30 );
-		self.D.F3.E_A:SetFont( "Infected.TinyTitle" );
-		self.D.F3.E_A:SetText( "Expression: Angry" );
-		function self.D.F3.E_A:DoClick()
+			self.D.F3.E_A = vgui.Create( "DButton", self.D.F3 );
+			self.D.F3.E_A:SetPos( 10, 24 + 10 + 128 + 10 + 30 + 10 + 30 + 10 + 30 + 10 + 30 + 10 );
+			self.D.F3.E_A:SetSize( 128, 30 );
+			self.D.F3.E_A:SetFont( "Infected.TinyTitle" );
+			self.D.F3.E_A:SetText( "Expression: Angry" );
+			function self.D.F3.E_A:DoClick()
+				
+				net.Start( "nSetExpression" );
+					net.WriteFloat( 2 );
+				net.SendToServer();
+				
+			end
 			
-			net.Start( "nSetExpression" );
-				net.WriteFloat( 2 );
-			net.SendToServer();
-			
-		end
-		
-		self.D.F3.E_F = vgui.Create( "DButton", self.D.F3 );
-		self.D.F3.E_F:SetPos( 10, 24 + 10 + 128 + 10 + 30 + 10 + 30 + 10 + 30 + 10 + 30 + 10 + 30 + 10 );
-		self.D.F3.E_F:SetSize( 128, 30 );
-		self.D.F3.E_F:SetFont( "Infected.TinyTitle" );
-		self.D.F3.E_F:SetText( "Expression: Furious" );
-		function self.D.F3.E_F:DoClick()
-			
-			net.Start( "nSetExpression" );
-				net.WriteFloat( 3 );
-			net.SendToServer();
+			self.D.F3.E_F = vgui.Create( "DButton", self.D.F3 );
+			self.D.F3.E_F:SetPos( 10, 24 + 10 + 128 + 10 + 30 + 10 + 30 + 10 + 30 + 10 + 30 + 10 + 30 + 10 );
+			self.D.F3.E_F:SetSize( 128, 30 );
+			self.D.F3.E_F:SetFont( "Infected.TinyTitle" );
+			self.D.F3.E_F:SetText( "Expression: Furious" );
+			function self.D.F3.E_F:DoClick()
+				
+				net.Start( "nSetExpression" );
+					net.WriteFloat( 3 );
+				net.SendToServer();
+				
+			end
 			
 		end
 		

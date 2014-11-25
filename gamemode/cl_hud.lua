@@ -140,6 +140,8 @@ function GM:HUDShouldDraw( str )
 	
 end
 
+function GM:AddNotify() end
+
 function GM:CalcView( ply, pos, ang, fov, znear, zfar )
 	
 	local ct = ( math.sin( CurTime() / 10 ) + 1 ) / 2;
@@ -612,7 +614,7 @@ GM.HUDFlies = { };
 
 function GM:HUDPaintInfected()
 	
-	if( LocalPlayer():PlayerClass() != PLAYERCLASS_INFECTED and LocalPlayer():PlayerClass() != PLAYERCLASS_SPECIALINFECTED ) then return end
+	if( !LocalPlayer():IsZombie() ) then return end
 	
 	if( !self.NextHUDFlies ) then self.NextHUDFlies = 0 end
 	
@@ -963,7 +965,7 @@ function GM:RenderScreenspaceEffects()
 	
 	DrawColorModify( self.ColorModDeContrast );
 	
-	if( LocalPlayer():PlayerClass() == PLAYERCLASS_INFECTED or LocalPlayer():PlayerClass() == PLAYERCLASS_SPECIALINFECTED ) then
+	if( LocalPlayer():IsZombie() ) then
 		
 		DrawColorModify( self.ColorModInfected );
 		

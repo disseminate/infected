@@ -23,7 +23,7 @@ function GM:PlayerSpawn( ply )
 	
 	self:SetPlayerSpeed( ply, 100, 200 );
 	
-	if( ply:PlayerClass() == PLAYERCLASS_INFECTED or ply:PlayerClass() == PLAYERCLASS_SPECIALINFECTED ) then
+	if( ply:IsZombie() ) then
 		
 		self:SetPlayerSpeed( ply, 40, 220 );
 		
