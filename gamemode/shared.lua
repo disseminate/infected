@@ -520,6 +520,33 @@ function GM:CanPlayerSeeZombieAt( pos )
 	
 end
 
+function GM:CanPlayerSeeItemAt( pos )
+	
+	for _, v in pairs( player.GetAll() ) do
+		
+		if( v:IsTargetable() ) then
+			
+			local d = v:GetPos():Distance( pos );
+			
+			if( d < 500 ) then return true end 
+			if( v:VisibleVec( pos ) ) then return true end 
+			
+			local dir = ( pos * v:EyePos() ):GetNormal();
+			
+			if( dir:Dot( v:GetAimVector() ) > 0.7071 and d < 2500 ) then
+				
+				return true;
+				
+			end
+			
+		end
+		
+	end
+	
+	return false;
+	
+end
+
 function GM:FormatLine( str, font, size )
 	
 	if( string.len( str ) == 1 ) then return str, 0 end

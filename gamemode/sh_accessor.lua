@@ -9,6 +9,8 @@ accessors["Player"] = {
 	{ "ToolTrust", "Bool", true },
 	{ "CharCreateFlags", "String", "" },
 	{ "PlayerClass", "Float", PLAYERCLASS_SURVIVOR },
+	{ "PlayerTitle", "String", "" },
+	{ "PlayerTitleColor", "String", "255 255 255" },
 };
 accessors["Entity"] = {
 	{ "DoorHealth", "Float", 100 },

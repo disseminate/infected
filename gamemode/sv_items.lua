@@ -261,17 +261,33 @@ function meta:UseItem( key )
 	
 	metaitem:OnUse( item );
 	
+	if( metaitem.UseHealth ) then
+		
+		self:SetHealth( math.Clamp( self:Health() + metaitem.UseHealth, 0, self:GetMaxHealth() ) );
+		
+	end
+	
+	if( metaitem.UseSound ) then
+		
+		self:EmitSound( metaitem.UseSound );
+		
+	end
+	
 	if( item.Vars.Uses ) then
 		
-		item.Vars.Uses = item.Vars.Uses - 1;
-		
-		if( item.Vars.Uses == 0 and metaitem.RemoveOnUse ) then
+		if( item.Vars.Uses > 0 ) then
 			
-			self:RemoveItem( key );
+			item.Vars.Uses = item.Vars.Uses - 1;
 			
-		else
-			
-			self:UpdateItemVars( key );
+			if( item.Vars.Uses == 0 and metaitem.RemoveOnUse ) then
+				
+				self:RemoveItem( key );
+				
+			else
+				
+				self:UpdateItemVars( key );
+				
+			end
 			
 		end
 		
@@ -300,6 +316,118 @@ function GM:CreateItemEnt( pos, ang, class, vars )
 	ent:Activate();
 	
 	return ent;
+	
+end
+
+function GM:NumItems()
+	
+	local c = 0;
+	
+	for _, v in pairs( ents.FindByClass( "inf_item" ) ) do
+		
+		if( v:GetAutospawn() ) then
+			
+			c = c + 1;
+			
+		end
+		
+	end
+	
+	return c;
+	
+end
+
+function GM:ItemThink()
+	
+	if( #self.NavHideSpots > 0 ) then
+		
+		if( !self.NextSpawnItem ) then self.NextSpawnItem = CurTime() end
+		
+		if( CurTime() >= self.NextSpawnItem ) then
+			
+			self.NextSpawnItem = CurTime() + 120;
+			self:SpawnItemRandom();
+			
+		end
+		
+		for _, v in pairs( ents.FindByClass( "inf_item" ) ) do
+			
+			if( v:GetAutospawn() and CurTime() >= v:GetAutospawnTime() + 600 ) then
+				
+				if( !self:CanPlayerSeeZombieAt( v:GetPos() ) ) then
+					
+					v:Remove();
+					
+				end
+				
+			end
+			
+		end
+		
+	end
+	
+end
+
+function GM:SpawnItemRandom()
+	
+	local rarity = math.random( 1, 100 );
+	local item;
+	
+	if( rarity > 98 ) then -- Ammo: 2%
+		
+		item = self:GetItemByTier( 5 );
+		
+	elseif( rarity > 94 ) then -- Primary weapons: 4%
+		
+		item = self:GetItemByTier( 4 );
+		
+	elseif( rarity > 85 ) then -- Secondary weapons: 9%
+		
+		item = self:GetItemByTier( 3 );
+		
+	elseif( rarity > 50 ) then -- Tier 2: 35%
+		
+		item = self:GetItemByTier( 2 );
+		
+	else -- Tier 1: 50%
+		
+		item = self:GetItemByTier( 1 );
+		
+	end
+	
+	if( !item ) then
+		
+		self:Log( "autospawn", "E", "Couldn't autospawn item - no item of tier!" );
+		return;
+		
+	end
+	
+	local tab = { };
+	
+	for _, v in pairs( self.Nodes ) do
+		
+		if( self:IsSpotClear( v ) and !self:CanPlayerSeeZombieAt( v ) ) then
+			
+			table.insert( tab, v );
+			
+		end
+		
+	end
+	
+	if( #tab == 0 ) then
+		
+		self:Log( "autospawn", "E", "Couldn't autospawn item - no nodes!" );
+		return;
+		
+	end
+	
+	local pos = table.Random( tab );
+	
+	local ent = self:CreateItemEnt( pos, Angle( 0, math.random( -180, 180 ), 0 ), item );
+	ent:SetAutospawn( true );
+	ent:SetAutospawnTime( CurTime() );
+	
+	self:Log( "autospawn", "A", "Created item " .. item .. " at Vector( " .. math.Round( pos.x ) .. ", " .. math.Round( pos.y ) .. ", " .. math.Round( pos.z ) .. " )." );
 	
 end
 

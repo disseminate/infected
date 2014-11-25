@@ -109,7 +109,24 @@ function PANEL:Paint()
 			end
 		end
 		
+		local curparent = self
+		local rightx = self:GetWide()
+		local leftx = 0
+		local topy = 0
+		local bottomy = self:GetTall()
+		local previous = curparent
+		while(curparent:GetParent() != nil) do
+			curparent = curparent:GetParent()
+			local x,y = previous:GetPos()
+			topy = math.Max(y, topy+y)
+			leftx = math.Max(x, leftx+x)
+			bottomy = math.Min(y+previous:GetTall(), bottomy + y)
+			rightx = math.Min(x+previous:GetWide(), rightx + x)
+			previous = curparent
+		end
+		render.SetScissorRect(leftx,topy,rightx, bottomy, true)
 		self.Entity:DrawModel()
+		render.SetScissorRect(0,0,0,0, false)
 		
 		render.SuppressEngineLighting( false )
 		cam.IgnoreZ( false )
@@ -170,9 +187,30 @@ function PANEL:StartScene( name )
 	
 end
 
+function PANEL:SetLookAtEyes()
+	
+	local attach = self.Entity:LookupAttachment( "eyes" );
+	
+	if( attach ) then
+		
+		local angpos = self.Entity:GetAttachment( attach );
+		
+		self:SetLookAt( angpos.Pos - Vector( 0, 0, 2 ) );
+		return;
+		
+	end
+	
+	self:SetLookAt( Vector( 0, 0, 64 ) );
+	
+end
+
 function PANEL:OnMousePressed( code )
 	
-	if( self.HasModel ) then
+	if( self.DoClick ) then
+		
+		self:DoClick();
+		
+	elseif( self.HasModel ) then
 		
 		self:MouseCapture( true );
 		self.MouseDetect = true;
@@ -340,3 +378,88 @@ function PANEL:Paint( w, h )
 end
 
 derma.DefineControl( "IChatPanel", "", PANEL, "EditablePanel" );
+
+local PANEL = { };
+
+function PANEL:Init()
+	
+	local y = 0;
+	
+	for _, v in pairs( player.GetAll() ) do
+		
+		local a = vgui.Create( "ICharPanel", self );
+		a:SetPos( 0, y );
+		a:SetSize( 84, 84 );
+		a.Entity:SetAngles( Angle() );
+		a:SetCamPos( Vector( 50, 20, 67 ) );
+		a:SetLookAtEyes();
+		a:SetFOV( 15 );
+		a:SetModel( v:GetModel() );
+		a.NoMouseWheel = true;
+		
+		function a:DoClick()
+			
+			if( v:SteamID64() ) then
+				
+				gui.OpenURL( "http://steamcommunity.com/profiles/" .. v:SteamID64() .. "/" );
+				
+			end
+			
+		end
+		
+		for i = 0, #v:GetMaterials() - 1 do
+			
+			a:SetSubMaterial( i, v:GetSubMaterial( i ) );
+			
+		end
+		
+		y = y + 84;
+		
+	end
+	
+end
+
+function PANEL:Paint( w, h )
+	
+	local y = 0;
+	local i = 0;
+	
+	for _, v in pairs( player.GetAll() ) do
+		
+		if( i % 2 == 0 ) then
+			
+			draw.RoundedBox( 0, 0, y, w, 84, Color( 0, 0, 0, 120 ) );
+			
+		end
+		
+		i = i + 1;
+		
+		surface.SetFont( "Infected.PlayerName" );
+		surface.SetTextColor( Color( 255, 255, 255, 255 ) );
+		surface.SetTextPos( 84 + 10, y + 4 );
+		surface.DrawText( v:RPName() );
+		
+		local wh, hh = surface.GetTextSize( v:Ping() );
+		surface.SetTextPos( 500 - wh - 12 - 10, y + 4 );
+		surface.DrawText( v:Ping() );
+		
+		surface.SetFont( "Infected.LabelSmaller" );
+		surface.SetTextPos( 84 + 10, y + 4 + 30 );
+		surface.DrawText( v:Nick() );
+		
+		local c = Vector( v:PlayerTitleColor() );
+		
+		surface.SetTextColor( Color( c.x, c.y, c.z, 255 ) );
+		surface.SetTextPos( 84 + 10, y + 4 + 30 + 20 );
+		surface.DrawText( v:PlayerTitle() );
+		
+		y = y + 84;
+		
+	end
+	
+	self:SetTall( y );
+	GAMEMODE.D.Scoreboard.Scroll:PerformLayout();
+
+end
+
+derma.DefineControl( "IScoreboard", "", PANEL, "EditablePanel" );

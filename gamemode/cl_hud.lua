@@ -52,6 +52,12 @@ surface.CreateFont( "Infected.LabelSmall", {
 	weight = 500,
 	antialias = true } );
 	
+surface.CreateFont( "Infected.LabelSmaller", {
+	font = "Myriad Pro",
+	size = 16,
+	weight = 500,
+	antialias = true } );
+	
 surface.CreateFont( "Infected.PlayerName", {
 	font = "BebasNeue",
 	size = 30,
@@ -726,7 +732,7 @@ function GM:HUDPaintOthers()
 		local pos = v:GetPos() + ( a + b ) / 2;
 		local ts = pos:ToScreen();
 		
-		if( self.SeeAll or ( pos:Distance( LocalPlayer():EyePos() ) < 768 and self:CanSeePos( LocalPlayer():EyePos(), pos, { LocalPlayer(), v } ) ) ) then
+		if( self.SeeAll or ( pos:Distance( LocalPlayer():EyePos() ) < 256 and self:CanSeePos( LocalPlayer():EyePos(), pos, { LocalPlayer(), v } ) ) ) then
 			
 			v.HUDA = math.Approach( v.HUDA, 1, FrameTime() );
 			
@@ -748,6 +754,12 @@ function GM:HUDPaintOthers()
 				end
 				
 				draw.DrawText( metaitem.Name, "Infected.PlayerName", ts.x, ts.y, col, 1 );
+				
+				if( self.SeeAll and v:GetAutospawn() ) then
+					
+					draw.DrawText( math.ceil( ( v:GetAutospawnTime() + 600 ) - CurTime() ) .. "s", "Infected.PlayerNameSmall", ts.x, ts.y + 20, Color( 100, 255, 100, 255 * v.HUDA ), 1 );
+					
+				end
 				
 			end
 			
@@ -784,7 +796,12 @@ end
 
 function GM:PreDrawHalos()
 	
-	
+	if( self.SeeAll ) then
+		
+		--halo.Add( ents.FindByClass( "inf_item" ), Color( 0, 200, 255, 255 ), 5, 5, 1, true, true );
+		--halo.Add( ents.FindByClass( "inf_zombie" ), Color( 255, 0, 0, 255 ), 5, 5, 1, true, true );
+		
+	end
 	
 end
 

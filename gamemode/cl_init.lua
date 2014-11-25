@@ -22,6 +22,7 @@ include( "cl_dev.lua" );
 include( "cl_hud.lua" );
 include( "cl_items.lua" );
 include( "cl_map.lua" );
+include( "cl_scoreboard.lua" );
 include( "cl_sound.lua" );
 include( "cl_think.lua" );
 

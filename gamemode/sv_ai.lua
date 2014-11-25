@@ -82,7 +82,7 @@ function GM:AIThink()
 		
 	end
 	
-	if( #self.NavHideSpots > 0 and self:NumZombies() < ( self.MaxAutospawnZombies or 30 ) ) then
+	if( #self.Nodes > 0 and self:NumZombies() < ( self.MaxAutospawnZombies or 30 ) ) then
 		
 		if( !self.NextSpawnZombie ) then self.NextSpawnZombie = CurTime() end
 		

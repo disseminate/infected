@@ -57,6 +57,16 @@ function GM:PostGamemodeLoaded()
 			ITEM.W = v.W or 1;
 			ITEM.H = v.H or 1;
 			
+			if( v.PrimaryWep ) then
+				
+				ITEM.Tier = 4;
+				
+			else
+				
+				ITEM.Tier = 3;
+				
+			end
+			
 			ITEM.PrimaryWep = v.PrimaryWep;
 			ITEM.SecondaryWep = v.SecondaryWep;
 			
@@ -151,6 +161,28 @@ function GM:Item( class )
 	tab.Secondary = false;
 	
 	return tab;
+	
+end
+
+function GM:GetItemByTier( tier )
+	
+	local tab = { };
+	
+	for k, v in pairs( self.MetaItems ) do
+		
+		if( v.Tier == tier ) then
+			
+			tab[k] = v;
+			
+		end
+		
+	end
+	
+	if( tab != { } ) then
+		
+		return table.Random( tab ).Class;
+		
+	end
 	
 end
 
