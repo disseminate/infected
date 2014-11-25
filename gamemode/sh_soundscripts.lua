@@ -1,4 +1,15 @@
 sound.Add( {
+	name = "Infected.Screamer",
+	channel = CHAN_ITEM,
+	volume = 1.0,
+	pitch = { 90, 150 },
+	level = 80,
+	sound = "npc/stalker/go_alert2a.wav"
+} );
+
+-------------------
+
+sound.Add( {
 	name = "Weapon_Glock18c.Single",
 	channel = CHAN_WEAPON,
 	volume = 1.0,

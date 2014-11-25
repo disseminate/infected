@@ -331,6 +331,58 @@ function SWEP:Reload()
 	
 end
 
+function SWEP:SecondaryHolstered()
+	
+	if( self.Owner:GetSpecialInfectedType() == SI_SCREAMER ) then
+		
+		if( !self.Owner.NextScream ) then self.Owner.NextScream = CurTime() end
+		
+		if( CurTime() >= self.Owner.NextScream ) then
+			
+			self:PlaySound( "Infected.Screamer" );
+			
+			if( SERVER ) then
+			
+				local d = math.huge;
+				local ply;
+				
+				for _, v in pairs( player.GetAll() ) do
+					
+					if( !v:IsZombie() ) then
+						
+						local di = v:GetPos():Distance( self.Owner:GetPos() );
+						
+						if( di < d and di < 256 ) then
+							
+							d = di;
+							ply = v;
+							
+						end
+						
+					end
+					
+				end
+				
+				if( ply ) then
+					
+					for _, v in pairs( GAMEMODE:ZombiesInSphere( self.Owner:GetPos(), 768 ) ) do
+						
+						v.LastShot = ply;
+						
+					end
+					
+				end
+				
+			end
+			
+			self.Owner.NextScream = CurTime() + 30;
+			
+		end
+		
+	end
+	
+end
+
 function SWEP:SecondaryUnholstered()
 	
 	

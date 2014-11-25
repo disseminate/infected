@@ -5,7 +5,7 @@ GM.ModelDefinitions[""] = {
 	ViewOffsetDucked = Vector( 0, 0, 28 ),
 };
 
-GM.ModelDefinitions["models/player/odessa.mdl"] = {
+GM.ModelDefinitions["FastZombie"] = {
 	ViewOffset = Vector( 0, 0, 50 ),
 	ViewOffsetDucked = Vector( 0, 0, 40 ),
 };
@@ -14,7 +14,13 @@ local meta = FindMetaTable( "Player" );
 
 function meta:GetModelDef()
 	
-	if( GAMEMODE.ModelDefinitions[self:GetModel()] ) then
+	local s = self:GetSpecialAnimSet();
+	
+	if( s and GAMEMODE.ModelDefinitions[s] ) then
+		
+		return GAMEMODE.ModelDefinitions[s];
+		
+	elseif( GAMEMODE.ModelDefinitions[self:GetModel()] ) then
 		
 		return GAMEMODE.ModelDefinitions[self:GetModel()];
 		

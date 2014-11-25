@@ -17,7 +17,9 @@ GM.ZombieAnimTab[ACT_MP_CROUCHWALK] = 1633;
 
 function GM:CalcSpecialActivity( ply, vel )
 	
-	if( ply:PlayerClass() == PLAYERCLASS_INFECTED ) then
+	local s = ply:GetSpecialAnimSet();
+	
+	if( ply:PlayerClass() == PLAYERCLASS_INFECTED or ( ply:PlayerClass() == PLAYERCLASS_SPECIALINFECTED and !s ) ) then
 		
 		if( self.ZombieAnimTab[ply.CalcIdeal] ) then
 			
@@ -27,7 +29,7 @@ function GM:CalcSpecialActivity( ply, vel )
 		
 	end
 	
-	if( ply:GetSpecialAnimSet() == "FastZombie" ) then
+	if( s == "FastZombie" ) then
 		
 		if( self.ZombieAnimTab[ply.CalcIdeal] ) then
 			

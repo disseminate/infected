@@ -131,6 +131,7 @@ GM.HECUModels = {
 
 GM.SpecialInfectedModels = {
 	"models/player/odessa.mdl",
+	"models/player/p2_chell.mdl",
 }
 
 if( CLIENT ) then -- Precache the materials

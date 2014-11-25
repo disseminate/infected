@@ -71,6 +71,12 @@ function meta:GetSpecialInfectedType()
 			
 		end
 		
+		if( self:GetModel() == "models/player/p2_chell.mdl" ) then
+			
+			return SI_SCREAMER;
+			
+		end
+		
 	end
 	
 end
