@@ -604,3 +604,50 @@ function GM:RefreshItemButtons()
 	end
 	
 end
+--[[
+function GM:PrePlayerDraw( ply )
+	
+	if( ply:SecondaryWeaponModel() != "" ) then
+		
+		if( ply:GetActiveWeapon() and ply:GetActiveWeapon() != NULL and ply:GetActiveWeapon():GetModel() != ply:SecondaryWeaponModel() ) then
+			
+			if( !ply.SecondaryBackpack ) then
+				
+				ply.SecondaryBackpack = ClientsideModel( ply:SecondaryWeaponModel(), RENDERGROUP_BOTH );
+				ply.SecondaryBackpack:SetPos( ply:GetPos() );
+				ply.SecondaryBackpack:SetAngles( ply:GetAngles() );
+				
+			else
+				
+				local idx = ply:LookupBone( "ValveBiped.Bip01_R_Thigh" );
+				local pos, ang = ply:GetBonePosition( idx );
+				
+				ply.SecondaryBackpack:SetPos( pos + ang:Up() * -3.5 + ang:Forward() * 5 );
+				
+				ang:RotateAroundAxis( ang:Up(), 180 );
+				ang:RotateAroundAxis( ang:Right(), 270 );
+				ang:RotateAroundAxis( ang:Forward(), 270 );
+				
+				ply.SecondaryBackpack:SetAngles( ang );
+				
+				if( ply.SecondaryBackpack:GetModel() != ply:SecondaryWeaponModel() ) then
+					
+					ply.SecondaryBackpack:SetModel( ply:SecondaryWeaponModel() );
+					
+				end
+				
+			end
+			
+		elseif( ply.SecondaryBackpack ) then
+			
+			ply.SecondaryBackpack = nil;
+			
+		end
+		
+	elseif( ply.SecondaryBackpack ) then
+		
+		
+		
+	end
+	
+end--]]

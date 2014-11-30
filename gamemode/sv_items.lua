@@ -12,6 +12,9 @@ function meta:ClearInventory()
 		
 	end
 	
+	self:SetPrimaryWeaponModel( "" );
+	self:SetSecondaryWeaponModel( "" );
+	
 	self.Inventory = { };
 	
 	mysqloo.Query( "DELETE FROM items WHERE SteamID = '" .. self:SteamID() .. "' AND CharID = '" .. self:CharID() .. "';" );
@@ -145,9 +148,21 @@ function meta:RemoveItem( key )
 		
 	end
 	
-	if( GAMEMODE:GetMetaItem( self.Inventory[key].Class ).PrimaryWep or GAMEMODE:GetMetaItem( self.Inventory[key].Class ).SecondaryWep ) then
+	local metaitem = GAMEMODE:GetMetaItem( self.Inventory[key].Class );
+	
+	if( metaitem.PrimaryWep or metaitem.SecondaryWep ) then
 		
 		self:StripWeapon( self.Inventory[key].Class );
+		
+		if( metaitem.PrimaryWep ) then
+			
+			self:SetPrimaryWeaponModel( "" );
+			
+		else
+			
+			self:SetSecondaryWeaponModel( "" );
+			
+		end
 		
 	end
 	
@@ -208,7 +223,11 @@ end
 
 function meta:MoveItemEquipped( key, x, y, p )
 	
-	if( self:IsInventorySlotOccupiedItemFilter( x, y, GAMEMODE:GetMetaItem( self.Inventory[key].Class ).W, GAMEMODE:GetMetaItem( self.Inventory[key].Class ).H, key ) ) then return end
+	if( !self.Inventory[key] ) then return end
+	
+	local metaitem = GAMEMODE:GetMetaItem( self.Inventory[key].Class );
+	
+	if( self:IsInventorySlotOccupiedItemFilter( x, y, metaitem.W, metaitem.H, key ) ) then return end
 	
 	local primary = "PrimaryEquipped = '1'";
 	
@@ -245,6 +264,16 @@ function meta:MoveItemEquipped( key, x, y, p )
 	self.Inventory[key].Secondary = false;
 	
 	self:StripWeapon( self.Inventory[key].Class );
+	
+	if( metaitem.PrimaryWep ) then
+		
+		self:SetPrimaryWeaponModel( "" );
+		
+	else
+		
+		self:SetSecondaryWeaponModel( "" );
+		
+	end
 	
 end
 
@@ -504,6 +533,7 @@ local function nEquipPrimary( len, ply )
 	item.Secondary = false;
 	
 	ply:Give( item.Class );
+	ply:SetPrimaryWeaponModel( metaitem.Model );
 	
 	if( item.Vars.Clip ) then
 		
@@ -546,6 +576,7 @@ local function nEquipSecondary( len, ply )
 	item.Secondary = true;
 	
 	ply:Give( item.Class );
+	ply:SetSecondaryWeaponModel( metaitem.Model );
 	
 	if( item.Vars.Clip ) then
 		

@@ -122,6 +122,18 @@ function GM:PlayerLoadout( ply )
 			
 			ply:Give( v.Class );
 			
+			local metaitem = GAMEMODE:GetMetaItem( v.Class );
+			
+			if( metaitem.PrimaryWep ) then
+				
+				ply:SetPrimaryWeaponModel( metaitem.Model );
+				
+			else
+				
+				ply:SetSecondaryWeaponModel( metaitem.Model );
+				
+			end
+			
 			if( v.Vars.Clip ) then
 				
 				ply:GetWeapon( v.Class ):SetClip1( v.Vars.Clip );
@@ -263,6 +275,9 @@ function meta:LoadItemData( data )
 		end
 		
 	end
+	
+	self:SetPrimaryWeaponModel( "" );
+	self:SetSecondaryWeaponModel( "" );
 	
 	self.Inventory = { };
 	net.Start( "nClearInventory" );

@@ -11,6 +11,8 @@ accessors["Player"] = {
 	{ "PlayerClass", "Float", PLAYERCLASS_SURVIVOR },
 	{ "PlayerTitle", "String", "" },
 	{ "PlayerTitleColor", "String", "255 255 255" },
+	{ "PrimaryWeaponModel", "String", "" },
+	{ "SecondaryWeaponModel", "String", "" },
 };
 accessors["Entity"] = {
 	{ "DoorHealth", "Float", 100 },
@@ -44,6 +46,8 @@ for k, v in pairs( accessors ) do
 		meta["Set" .. name] = function( self, val, shared )
 			
 			self["_accessor_" .. name] = val;
+			
+			GAMEMODE:OnAccessorChanged( name, val );
 			
 			if( SERVER and !shared ) then
 				
@@ -165,5 +169,11 @@ else
 		end
 		
 	end
+	
+end
+
+function GM:OnAccessorChanged( name, val )
+	
+	
 	
 end
