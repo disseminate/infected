@@ -268,6 +268,10 @@ function meta:LoadItemData( data )
 	net.Start( "nClearInventory" );
 	net.Send( self );
 	
+	GAMEMODE.ItemData[self:SteamID()][self:CharID()] = { };
+	
+	if( !data ) then return end
+	
 	for _, v in pairs( data ) do
 		
 		if( !v.Class ) then continue; end

@@ -541,6 +541,7 @@ function GM:KeyPress( ply, key )
 		if( ply:GetActiveWeapon() and ply:GetActiveWeapon():IsValid() and ply:GetActiveWeapon().ItemAmmo ) then
 			
 			local ammo = ply:GetItemsOfType( ply:GetActiveWeapon().ItemAmmo );
+			local wep = ply:GetActiveWeapon();
 			
 			if( #ammo > 0 ) then
 				
@@ -566,7 +567,9 @@ function GM:KeyPress( ply, key )
 					but:SetModel( metaitem.Model );
 					function but:Click( item, metaitem )
 						
-						ply:GetActiveWeapon():ReloadItem( item, metaitem );
+						if( !wep or !wep:IsValid() ) then return end
+						
+						wep:ReloadItem( item, metaitem );
 						
 						net.Start( "nReload" );
 							net.WriteFloat( item.Key );

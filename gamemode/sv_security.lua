@@ -9,6 +9,7 @@ GM.PrivateSteamIDs = {
 	"STEAM_0:0:7630327", -- Matt
 	"STEAM_0:0:20692447", -- Casadis
 	"STEAM_0:0:17837249", -- Johnny Guitar
+	"STEAM_0:1:11646467", -- Marky
 };
 
 GM.ClosedMessage = ":~)";

@@ -1,6 +1,6 @@
 ITEM.Name = "5.56mm Rounds";
 ITEM.Desc = "Ammunition for firearms chambered in 5.56mm.";
-ITEM.Model = "models/Items/BoxSRounds.mdl";
+ITEM.Model = "models/Items/BoxMRounds.mdl";
 
 ITEM.W = 1;
 ITEM.H = 1;

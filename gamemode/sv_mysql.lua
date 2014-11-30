@@ -295,6 +295,7 @@ end
 function meta:PreloadCharacters()
 	
 	MsgC( Color( 128, 128, 128, 255 ), "Preloading characters for " .. self:Nick() .. "...\n" );
+	GAMEMODE.ItemData[self:SteamID()] = { };
 	
 	local function qs( res )
 		
@@ -312,8 +313,6 @@ function meta:PreloadCharacters()
 		net.Send( self );
 		
 		MsgC( Color( 128, 128, 128, 255 ), "Preloaded character data for " .. self:Nick() .. ".\n" );
-		
-		GAMEMODE.ItemData[self:SteamID()] = { };
 		
 		for _, v in pairs( res ) do
 			
@@ -397,6 +396,7 @@ function meta:SaveNewCharacter( class, name, desc, model, face, clothes )
 		tab["id"] = id;
 		
 		table.insert( GAMEMODE.CharData[self:SteamID()], tab );
+		GAMEMODE.ItemData[self:SteamID()][id] = { };
 		
 		MsgC( Color( 128, 128, 128, 255 ), "Saved new character " .. name .. ".\n" );
 		

@@ -45,6 +45,8 @@ function GM:PlayerFootstep( ply, pos, foot, s, vol, rf )
 	
 end
 
+function GM:PlayerSay() return false end
+
 function meta:IsZombie()
 	
 	return ( self:PlayerClass() == PLAYERCLASS_INFECTED or self:PlayerClass() == PLAYERCLASS_SPECIALINFECTED );
