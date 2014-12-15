@@ -12,3 +12,5 @@ It is currently incomplete, but will likely be worked on in the future.
 * Change the MySQL DB info in sv_mysql.lua to your own.
 * Ingame, run "rpa_addseeds" while on the ground and "rpa_generatenavmesh". Generation will take a while.
 * Enjoy!
+
+Licensed under [CC-BY 4.0](http://creativecommons.org/licenses/by/4.0/).
