@@ -2,10 +2,10 @@ require( "mysqloo" );
 
 local meta = FindMetaTable( "Player" );
 
-local MySQLHost = "192.254.233.171";
-local MySQLUser = "dissemin_inf";
-local MySQLPass = "d99beH8DAyF123sVx1915Jk2E2YLB50jA1q5k87F";
-local MySQLDB = "dissemin_infected";
+local MySQLHost = "";
+local MySQLUser = "";
+local MySQLPass = "";
+local MySQLDB = "";
 local MySQLPort = 3306;
 
 GM.SQLQueue = { };
