@@ -1,15 +1,7 @@
-GM.PrivateMode = true;
+GM.PrivateMode = false;
 
 GM.PrivateSteamIDs = {
 	STEAMID_DISSEMINATE,
-	"STEAM_0:0:21984997", -- DoctorX
-	"STEAM_0:1:14489810", -- Hoplite
-	"STEAM_0:0:15037249", -- Aimosal
-	"STEAM_0:1:14536052", -- Sno
-	"STEAM_0:0:7630327", -- Matt
-	"STEAM_0:0:20692447", -- Casadis
-	"STEAM_0:0:17837249", -- Johnny Guitar
-	"STEAM_0:1:11646467", -- Marky
 };
 
 GM.ClosedMessage = ":~)";
