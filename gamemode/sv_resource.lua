@@ -1,4 +1,5 @@
 resource.AddSingleFile( "resource/fonts/bebasneue.ttf" );
+resource.AddSingleFile( "materials/infected/vgui/logobig.png" );
 
 resource.AddWorkshop( 315557857 );
 
