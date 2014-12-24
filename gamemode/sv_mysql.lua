@@ -50,7 +50,7 @@ function GM:ConnectToSQL()
 			
 		else
 			
-			MsgC( "ERROR: MySQL connection failed: Unspecified error: \"" .. err .. "\".\n" );
+			MsgC( COLOR_ERROR, "ERROR: MySQL connection failed: Unspecified error: \"" .. err .. "\".\n" );
 			GAMEMODE:ConnectToSQL();
 			
 		end
