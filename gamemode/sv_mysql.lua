@@ -39,9 +39,21 @@ function GM:ConnectToSQL()
 
 	function InfSQL:onConnectionFailed( err )
 		
-		if( string.find( err, "Unknown MySQL server host" ) ) then return end
-		
-		GAMEMODE:ConnectToSQL();
+		if( string.find( err, "Unknown MySQL server host" ) ) then
+			
+			return;
+			
+		elseif( string.find( err, "Access denied for user" ) ) then
+			
+			MsgC( "ERROR: MySQL connection failed: Access denied for user \"" .. MySQLUser .. "\".\n" );
+			return;
+			
+		else
+			
+			MsgC( "ERROR: MySQL connection failed: Unspecified error: \"" .. err .. "\".\n" );
+			GAMEMODE:ConnectToSQL();
+			
+		end
 		
 	end
 
